@@ -80,6 +80,12 @@ Important tables include timestamps to track creation and modification history.
 
 ---
 
+## 3.6 Timezone Convention
+
+All `DATETIME` and `TIMESTAMP` columns store values in **UTC**. Conversion to the user's local timezone happens at the presentation layer (frontend), not in the database or stored values. This avoids ambiguity from daylight-saving changes or users traveling across timezones.
+
+---
+
 # 4. Naming Conventions
 
 The following naming conventions are used throughout the database.
@@ -171,9 +177,15 @@ Users
  │
  ├──────── User Preferences
  │
+ ├──────── Study Goals
+ │
+ ├──────── User Sessions
+ │
  ├──────── Tasks
  │            │
  │            └────── Subtasks
+ │
+ ├──────── Task Categories
  │
  ├──────── Calendar Events
  │
@@ -181,12 +193,12 @@ Users
  │
  ├──────── Notifications
  │
- ├──────── Analytics
- │
- ├──────── Achievements
+ ├──────── User Achievements
  │
  └──────── AI History
 ```
+
+Note: Analytics (daily/weekly/monthly productivity, streaks, averages) are **calculated dynamically** from `tasks` and `pomodoro_sessions` — there is no dedicated `analytics` table. See §25 and §29.
 
 ---
 
@@ -194,19 +206,23 @@ Users
 
 The MVP includes the following primary tables.
 
-| Table             | Purpose                  |
-| ----------------- | ------------------------ |
-| users             | User accounts            |
-| user_preferences  | User settings            |
-| tasks             | Task management          |
-| task_categories   | Task categories          |
-| subtasks          | Child tasks              |
-| calendar_events   | Calendar module          |
-| pomodoro_sessions | Study sessions           |
-| analytics         | Productivity statistics  |
-| notifications     | User reminders           |
-| achievements      | Gamification             |
-| ai_history        | AI generated suggestions |
+| Table             | Purpose                          |
+| ----------------- | --------------------------------- |
+| users             | User accounts                     |
+| user_preferences  | User settings                     |
+| study_goals       | Long-term productivity goals      |
+| user_sessions     | Active login session tracking     |
+| tasks             | Task management                   |
+| task_categories   | Task categories                   |
+| subtasks          | Child tasks                       |
+| calendar_events   | Calendar module                   |
+| pomodoro_sessions | Study sessions                    |
+| notifications     | User reminders                    |
+| achievements      | Gamification (achievement defs)   |
+| user_achievements | Gamification (earned achievements)|
+| ai_history        | AI generated suggestions          |
+
+This table matches the final 13-table schema detailed in Parts 2–4 and summarized in §31.
 
 ---
 
@@ -247,7 +263,8 @@ Each user owns their personal tasks, calendar events, study sessions, notificati
 | email         | VARCHAR(255)           | No       | UNIQUE            | User email address                         |
 | password_hash | VARCHAR(255)           | Yes      | NULL              | Encrypted password (NULL for Google login) |
 | auth_provider | ENUM('local','google') | No       | 'local'           | Authentication provider                    |
-| profile_image | VARCHAR(500)           | Yes      | NULL              | Profile picture URL                        |
+| user_type     | ENUM('student','professional','other') | Yes | NULL     | Selected during onboarding                 |
+| profile_image | VARCHAR(500)           | Yes      | NULL              | Profile picture URL (external URL or Google avatar; MVP has no file upload — see 12-NonGoals.md §3.11) |
 | is_verified   | BOOLEAN                | No       | FALSE             | Email verification status                  |
 | last_login    | DATETIME               | Yes      | NULL              | Last successful login                      |
 | created_at    | TIMESTAMP              | No       | CURRENT_TIMESTAMP | Record creation timestamp                  |
@@ -348,6 +365,7 @@ Separating preferences from the users table keeps authentication data clean and 
 | user_id               | BIGINT UNSIGNED                               | No       | FK                | Owner of preferences    |
 | theme                 | ENUM('light','dark')                          | No       | 'dark'            | Application theme       |
 | daily_goal_hours      | DECIMAL(3,1)                                  | No       | 2.0               | Daily study goal        |
+| weekly_goal_hours     | DECIMAL(4,1)                                  | Yes      | NULL              | Weekly study goal (must be ≥ daily_goal_hours; validated at application layer per 01-PRD.md §33) |
 | preferred_study_time  | ENUM('morning','afternoon','evening','night') | Yes      | NULL              | Preferred study session |
 | notifications_enabled | BOOLEAN                                       | No       | TRUE              | Notification preference |
 | sound_enabled         | BOOLEAN                                       | No       | TRUE              | Sound effects           |
@@ -392,6 +410,7 @@ Each user has exactly one preferences record.
   "user_id": 1,
   "theme": "dark",
   "daily_goal_hours": 4,
+  "weekly_goal_hours": 28,
   "preferred_study_time": "evening",
   "notifications_enabled": true,
   "sound_enabled": true
@@ -631,6 +650,8 @@ Every task belongs to exactly one user and may contain multiple subtasks.
 | due_date          | DATETIME                                  | Yes      | NULL              | Due date & time           |
 | completed_at      | DATETIME                                  | Yes      | NULL              | Completion timestamp      |
 | notes             | TEXT                                      | Yes      | NULL              | Additional notes          |
+| tags              | VARCHAR(255)                              | Yes      | NULL              | Comma-separated free-text tags (MVP). A normalized, reusable tags table is a Version 2 enhancement (see §28). |
+| color             | VARCHAR(20)                               | Yes      | NULL              | Optional task-level color label            |
 | created_at        | TIMESTAMP                                 | No       | CURRENT_TIMESTAMP | Creation time             |
 | updated_at        | TIMESTAMP                                 | No       | CURRENT_TIMESTAMP | Last update               |
 
@@ -691,7 +712,9 @@ users (1)
   "estimated_minutes": 180,
   "actual_minutes": 120,
   "due_date": "2026-07-15 18:00:00",
-  "completed_at": null
+  "completed_at": null,
+  "tags": "auth,react,jwt",
+  "color": "#3B82F6"
 }
 ```
 
@@ -734,6 +757,7 @@ Examples include:
 | name       | VARCHAR(100)    | No       | -                 | Category name   |
 | color      | VARCHAR(20)     | Yes      | NULL              | UI color        |
 | icon       | VARCHAR(50)     | Yes      | NULL              | Icon identifier |
+| is_default | BOOLEAN         | No       | FALSE             | Marks a system-seeded default category (cannot be deleted — see Business Rules) |
 | created_at | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Creation time   |
 | updated_at | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Last update     |
 
@@ -766,7 +790,7 @@ tasks (Many)
 ## Business Rules
 
 - Category names must be unique per user.
-- Default categories cannot be deleted.
+- Categories with `is_default = TRUE` cannot be deleted. Default categories are seeded automatically for each user at account creation (e.g., "Personal", "General").
 - Color is optional.
 
 ---
@@ -779,7 +803,8 @@ tasks (Many)
   "user_id": 1,
   "name": "React",
   "color": "#3B82F6",
-  "icon": "code"
+  "icon": "code",
+  "is_default": false
 }
 ```
 
@@ -1340,7 +1365,7 @@ This enables users to revisit previous AI-generated schedules and recommendation
 | user_id    | BIGINT UNSIGNED | No       | FK                | User               |
 | prompt     | TEXT            | No       | -                 | User request       |
 | response   | LONGTEXT        | No       | -                 | AI response        |
-| model_name | VARCHAR(100)    | Yes      | NULL              | AI model used      |
+| model_name | VARCHAR(100)    | Yes      | NULL              | AI model/provider identifier (configurable — see 02-TechSpec.md §7.1) |
 | created_at | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Creation timestamp |
 
 ---
@@ -1381,7 +1406,7 @@ ai_history (Many)
   "user_id": 1,
   "prompt": "Create a study schedule for Java and React.",
   "response": "Monday: Java Core\nTuesday: React Components\n...",
-  "model_name": "Grok-4"
+  "model_name": "configured-ai-provider"
 }
 ```
 
@@ -1404,53 +1429,6 @@ Together with the tables defined in Parts 2 and 3, these tables provide the comp
 ---
 
 # End of Part 4
-
-🔍 Database Review (Very Important)
-
-Now that we've designed almost the entire schema, I noticed three improvements that I strongly recommend before we write Part 5.
-
-1. Add Soft Deletes
-
-Instead of permanently deleting important records, add:
-
-deleted_at TIMESTAMP NULL
-
-to tables like:
-
-tasks
-calendar_events
-study_goals
-
-This allows recovery of accidentally deleted data and is a common production practice.
-
-2. Add UUID Support
-
-Keep id as the primary key, but also add:
-
-uuid CHAR(36) UNIQUE
-
-for public-facing identifiers.
-
-That way, URLs become:
-
-/task/550e8400-e29b-41d4-a716-446655440000
-
-instead of:
-
-/task/15
-
-This improves security and makes IDs harder to guess.
-
-3. Add Audit Fields
-
-For important tables such as tasks and calendar_events, consider adding:
-
-created_by
-updated_by
-
-In the MVP, these will usually be the same as user_id, but they become useful if you ever add collaboration or admin features.
-
----
 
 # PART 5 – Database Relationships, Constraints & Future Strategy
 

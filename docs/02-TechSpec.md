@@ -134,13 +134,15 @@ StudySync uses MySQL as its relational database.
 
 The schema follows Third Normal Form (3NF) and consists of 13 primary tables covering:
 
-- Users
-- Tasks
-- Calendar
+- Users, User Preferences, Study Goals, User Sessions
+- Tasks, Task Categories, Subtasks
+- Calendar Events
 - Pomodoro Sessions
 - Notifications
-- Achievements
+- Achievements, User Achievements
 - AI History
+
+Analytics are calculated dynamically and do not have a dedicated table (see `04-DatabaseSchema.md` §6, §25).
 
 Detailed table definitions are available in `04-DatabaseSchema.md`.
 
@@ -162,6 +164,21 @@ Major API groups include:
 - Analytics
 
 API documentation is maintained separately in `05-API.md`.
+
+---
+
+# 7.1 Key Library & Tooling Decisions
+
+To remove ambiguity before backend implementation begins, the following tooling choices are fixed for the MVP. Each is chosen to fit the architecture already defined in `07-ProjectStructure.md` rather than introduce a competing pattern.
+
+| Concern | MVP Decision | Rationale |
+| --- | --- | --- |
+| MySQL query layer | `mysql2` (promise-based driver), used inside the `repositories/` layer | Avoids a full ORM's model layer duplicating the already-planned Repository pattern; keeps queries explicit and easy to optimize per `04-DatabaseSchema.md` |
+| Request validation | Joi | Populates the existing `validations/` folder with a schema-based validator |
+| Frontend data/state | React Context + native `fetch`, wrapped by the existing `services/` layer | Matches the `context/` folder already defined in `07-ProjectStructure.md`; a caching library (SWR/React Query) may be introduced in Version 2 if API traffic patterns justify it |
+| Logging | Structured console/file logging (e.g., a minimal Winston setup) | Sufficient for MVP; full APM/error-monitoring (e.g., Sentry) is a Version 2 addition |
+| AI provider | Configurable via an `AI_PROVIDER` environment variable rather than hard-coded to one vendor | Keeps the AI Assistant (see `01-PRD.md` §26) provider-agnostic; the specific vendor is a deployment-time decision, not an architectural one |
+| Timezone handling | All dates/times stored in UTC; converted to local time at the presentation layer | See `04-DatabaseSchema.md` §3.6 |
 
 ---
 

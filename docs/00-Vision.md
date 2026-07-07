@@ -338,15 +338,30 @@ The MVP focuses on solving the core productivity problems faced by students and 
 - Daily Study Goal
 - Notification Settings
 
+### Gamification (Basic)
+
+- Daily Streak
+- Achievement Badges
+- Rewards System
+- User Avatar Progression
+- Milestone Celebrations
+
+### AI Assistant (Basic)
+
+- AI Schedule Optimization
+- AI Study Time Estimation
+
+AI Assistant features in the MVP are intentionally minimal — they assist with scheduling and time estimation only. Deeper AI capabilities (daily planning, productivity suggestions, goal refinement) are Version 2 enhancements. See 12-NonGoals.md §3.5 for what is explicitly excluded even from this basic scope.
+
 ---
 
 ## Version 2
 
 After the successful completion of the MVP, the platform may include additional productivity enhancements such as:
 
-- AI Study Planner
-- AI Schedule Optimization
-- AI Time Estimation
+- AI Daily Planner
+- AI Productivity Suggestions
+- AI Goal Refinement
 - Advanced Analytics
 - Smart Notifications
 - Habit Tracking

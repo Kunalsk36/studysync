@@ -58,7 +58,6 @@ frontend/
 │   ├── app/
 │   ├── components/
 │   ├── layouts/
-│   ├── pages/ (if required)
 │   ├── hooks/
 │   ├── services/
 │   ├── context/
@@ -77,7 +76,7 @@ frontend/
 
 | Folder     | Purpose                    |
 | ---------- | -------------------------- |
-| app        | Next.js App Router pages   |
+| app        | Next.js App Router pages (used exclusively — no legacy Pages Router) |
 | components | Reusable UI components     |
 | layouts    | Shared layouts             |
 | hooks      | Custom React hooks         |
@@ -125,9 +124,9 @@ backend/
 | routes       | API route definitions       |
 | controllers  | Handle HTTP requests        |
 | services     | Business logic              |
-| repositories | Database operations         |
+| repositories | Database operations (all SQL queries live here, using `mysql2` — see `02-TechSpec.md` §7.1) |
 | middleware   | Authentication & middleware |
-| models       | Database models / ORM       |
+| models       | Plain data-shape definitions used across services/repositories (not an ORM's active-record models — this project does not use a full ORM) |
 | validations  | Request validation          |
 | utils        | Helper functions            |
 | constants    | Shared constants            |

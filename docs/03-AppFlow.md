@@ -516,6 +516,8 @@ Reset Password
 Login
 ```
 
+If the email belongs to a Google-only account (`auth_provider = 'google'`, no local password), the flow short-circuits after "Validate Email" to a message directing the user to sign in with Google instead of sending a reset email (see 01-PRD.md §15.8).
+
 ---
 
 ### Google Sign-In Flow
@@ -541,6 +543,8 @@ Existing User?
     │             │
 Dashboard     Onboarding
 ```
+
+"Existing User" is determined by email match, not just prior Google Sign-In: if the Google account's email matches an existing Email/Password account, the login links to that existing account rather than creating a duplicate (see 01-PRD.md §15.5).
 
 ---
 
@@ -743,33 +747,7 @@ JWT Expired?
 
 # 15. Logout Flow
 
-```
-Dashboard
-     │
-     ▼
-Click Logout
-     │
-     ▼
-Confirmation Dialog
-     │
- ┌───┴───────────┐
- │               │
-Cancel         Confirm
- │               │
-Dashboard     Clear JWT
-                   │
-                   ▼
-           Redirect Landing Page
-```
-
----
-
-## Logout Rules
-
-- JWT token is removed.
-- Protected pages become inaccessible.
-- Browser Back should not restore authenticated pages.
-- User returns to the Landing Page.
+The Logout Flow is a system-wide flow identical regardless of which page the user logs out from. See §32 (Part 4 – System Flows & Edge Cases) for the full diagram and rules.
 
 ---
 

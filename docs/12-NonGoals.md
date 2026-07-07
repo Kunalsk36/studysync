@@ -193,6 +193,8 @@ Examples:
 - Videos
 - Cloud storage
 
+This includes profile pictures: in the MVP, a profile picture is set via an external image URL or automatically from the user's Google account — there is no file upload capability. Direct upload (e.g., via Cloudinary) is a Version 2 enhancement (see 11-ProductFeatures.md §19).
+
 ---
 
 ## 3.12 Public API

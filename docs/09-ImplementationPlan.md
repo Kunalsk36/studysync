@@ -826,7 +826,7 @@ Implement a notification system that reminds users about important tasks, study 
 
 ## Objective
 
-Increase user motivation through achievements, streaks, rewards, and progress milestones.
+Increase user motivation through achievements, streaks, rewards, and progress milestones. This is a basic-scope MVP module per 00-Vision.md §11 and 01-PRD.md §39 (daily streak, badges, rewards, avatar, milestone celebrations only) — levels, XP, and challenges are Version 2.
 
 ---
 
@@ -887,7 +887,7 @@ Increase user motivation through achievements, streaks, rewards, and progress mi
 
 ## Objective
 
-Integrate AI-powered productivity features to help users plan their studies, estimate task duration, and improve productivity.
+Integrate AI-powered productivity features to help users plan their studies, estimate task duration, and improve productivity. This is a basic-scope MVP module per 00-Vision.md §11 and 01-PRD.md §39 (schedule optimization and time estimation only) — daily planning, productivity suggestions, and goal refinement are Version 2. The AI provider is configurable (see 02-TechSpec.md §7.1), not hard-coded to one vendor.
 
 ---
 
@@ -1095,6 +1095,7 @@ Perform comprehensive testing to ensure all modules work correctly, integrate pr
 - Validate response formats
 - Error handling
 - Authentication testing
+- Automated integration tests for Authentication and Task Management endpoints (the two highest-risk modules — see 08-Rules.md §16); remaining modules are covered by manual testing in the MVP
 
 ### UI Testing
 

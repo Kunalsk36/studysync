@@ -33,6 +33,10 @@ The APIs are grouped into the following modules:
 - Study Goals
 - Pomodoro
 - Notifications
+- Dashboard
+- Analytics
+- Achievements
+- Search
 - AI Assistant
 
 All APIs exchange data using JSON.
@@ -110,16 +114,20 @@ Unauthenticated requests to protected endpoints should return:
 | POST   | /auth/forgot-password | Request password reset |
 | POST   | /auth/reset-password  | Reset password         |
 
+MVP authentication uses a single JWT access token with no refresh token — expired tokens require a full re-login (see 03-AppFlow.md §26). Refresh-token support is a Version 2 enhancement.
+
 ---
 
 # 7. User APIs
 
-| Method | Endpoint           | Description        |
-| ------ | ------------------ | ------------------ |
-| GET    | /users/profile     | Get profile        |
-| PUT    | /users/profile     | Update profile     |
-| GET    | /users/preferences | Get preferences    |
-| PUT    | /users/preferences | Update preferences |
+| Method | Endpoint           | Description             |
+| ------ | ------------------ | ------------------------ |
+| GET    | /users/profile     | Get profile             |
+| PUT    | /users/profile     | Update profile          |
+| GET    | /users/preferences | Get preferences         |
+| PUT    | /users/preferences | Update preferences      |
+| PUT    | /users/password     | Change account password |
+| DELETE | /users/account      | Permanently delete account and all associated data (cascades per 04-DatabaseSchema.md §22) |
 
 ---
 
@@ -190,7 +198,66 @@ Unauthenticated requests to protected endpoints should return:
 
 ---
 
-# 14. AI APIs
+# 14. Dashboard APIs
+
+| Method | Endpoint                  | Description                                          |
+| ------ | ------------------------- | ----------------------------------------------------- |
+| GET    | /dashboard/summary        | Today's tasks, daily/weekly goal progress, study hours |
+| GET    | /dashboard/recent-activity | Recently completed tasks and sessions                 |
+
+Example response for `GET /dashboard/summary`:
+
+```json
+{
+  "success": true,
+  "message": "Dashboard summary retrieved.",
+  "data": {
+    "todaysTasks": [],
+    "dailyGoalHours": 4,
+    "weeklyGoalHours": 28,
+    "studyHoursToday": 1.5,
+    "upcomingEvents": []
+  }
+}
+```
+
+---
+
+# 15. Analytics APIs
+
+| Method | Endpoint                | Description                              |
+| ------ | ----------------------- | ----------------------------------------- |
+| GET    | /analytics/daily        | Daily productivity (tasks, study hours)   |
+| GET    | /analytics/weekly       | Weekly productivity summary               |
+| GET    | /analytics/monthly      | Monthly productivity summary              |
+| GET    | /analytics/streak       | Current and longest study streak          |
+
+Analytics values are calculated dynamically from `tasks` and `pomodoro_sessions` (see 04-DatabaseSchema.md §25, §29) rather than read from a dedicated table.
+
+---
+
+# 16. Achievement APIs
+
+| Method | Endpoint              | Description                          |
+| ------ | --------------------- | -------------------------------------- |
+| GET    | /achievements         | List all achievement definitions       |
+| GET    | /achievements/earned  | List achievements earned by the user   |
+
+Achievements are unlocked automatically by the backend when milestone conditions are met (per 01-PRD.md BR-004-adjacent gamification rules) — there is no endpoint to manually award an achievement.
+
+---
+
+# 17. Search API
+
+| Method | Endpoint  | Description                                          |
+| ------ | --------- | ------------------------------------------------------ |
+| GET    | /search   | Search tasks and calendar events by keyword (`?q=`)     |
+
+Search is scoped to the authenticated user's own data only (per 01-PRD.md FR-SEARCH rules).
+
+---
+
+# 18. AI APIs
 
 | Method | Endpoint          | Description              |
 | ------ | ----------------- | ------------------------ |
@@ -199,9 +266,11 @@ Unauthenticated requests to protected endpoints should return:
 | POST   | /ai/suggestions   | Productivity suggestions |
 | GET    | /ai/history       | AI history               |
 
+The AI provider is configurable rather than hard-coded (see 02-TechSpec.md §7.1) — these endpoints call whichever provider is configured via environment variables.
+
 ---
 
-# 15. Future APIs
+# 19. Future APIs
 
 Future releases may include:
 
@@ -209,12 +278,11 @@ Future releases may include:
 - Notes APIs
 - File Upload APIs
 - Reminder APIs
-- Analytics APIs
 - Public API
 
 ---
 
-# 16. HTTP Status Codes
+# 20. HTTP Status Codes
 
 | Code | Meaning               |
 | ---- | --------------------- |
@@ -231,7 +299,7 @@ Future releases may include:
 
 ---
 
-# 17. API Design Principles
+# 21. API Design Principles
 
 The StudySync API follows these principles:
 
@@ -245,7 +313,7 @@ The StudySync API follows these principles:
 
 ---
 
-# 18. API Summary
+# 22. API Summary
 
 The StudySync backend provides REST APIs for all major application modules.
 

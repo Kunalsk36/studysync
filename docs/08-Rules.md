@@ -268,7 +268,7 @@ Before considering a feature complete:
 - Test API endpoints.
 - Verify error handling.
 
-Future versions may include automated testing.
+Authentication and Task Management APIs additionally require lightweight automated integration tests (see 09-ImplementationPlan.md Phase 14) since they are the highest-risk modules for regressions as later phases build on them. The rest of the MVP relies on manual testing; broader automated coverage is a Version 2 improvement.
 
 ---
 

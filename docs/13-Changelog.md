@@ -1,5 +1,14 @@
 # Changelog
 
+**Project:** StudySync
+**Version:** 1.0.1
+**Status:** Active Development
+**Author:** Kunal Shrikant Kavathekar
+**Created:** 2026-07-06
+**Last Updated:** 2026-07-07
+
+---
+
 All notable changes to the StudySync project will be documented in this file.
 
 This project follows a structured changelog to record major milestones, new features, improvements, bug fixes, and documentation updates throughout the development lifecycle.
@@ -95,6 +104,32 @@ Created the following project documents:
 ## Removed
 
 - No removals in the initial release.
+
+---
+
+# [1.0.1] - 2026-07-07
+
+## Added
+
+- Full documentation review across all 14 documents (`docs/Review.md`).
+- Root `.gitignore` and GitHub repository connection (`Kunalsk36/studysync`).
+- Missing API endpoint groups: Dashboard, Analytics, Achievements, Search; password-change and account-deletion endpoints.
+- Missing database fields: `users.user_type`, `user_preferences.weekly_goal_hours`, `tasks.tags`, `tasks.color`, `task_categories.is_default`.
+- Key tooling decisions recorded in `02-TechSpec.md` (query layer, validation library, frontend state approach, logging, AI provider, timezone convention).
+
+## Changed
+
+- Confirmed AI Assistant and Gamification as basic-scope MVP modules (not Version 2) across Vision, PRD, Product Features, and Implementation Plan.
+- Clarified profile picture handling in the MVP (URL/Google avatar only, no file upload).
+- Clarified several business rules: cross-provider account linking, Forgot Password on Google-only accounts, task due-date validation on edit vs. creation, notification preference granularity.
+
+## Fixed
+
+- Corrected internal mismatch in `04-DatabaseSchema.md` between the early table overview and the final 13-table schema (removed a phantom "analytics" table, added missing tables to the overview).
+- Removed stray, non-canonical content accidentally left in `04-DatabaseSchema.md`.
+- Fixed a grammar typo in `01-PRD.md` (FR-AUTH-004).
+- Consolidated duplicate Logout Flow diagrams in `03-AppFlow.md`.
+- Resolved Next.js router ambiguity in `07-ProjectStructure.md` (App Router only).
 
 ---
 

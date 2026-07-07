@@ -550,7 +550,7 @@ Priority: High
 
 ### FR-AUTH-004
 
-Users shall be be able to reset forgotten passwords.
+Users shall be able to reset forgotten passwords.
 
 Priority: High
 
@@ -579,6 +579,7 @@ Priority: High
 - JWT tokens must expire after a configurable duration.
 - Protected routes require authentication.
 - Users cannot access another user's information.
+- If a Google Sign-In attempt matches an email address already registered via Email/Password, the system shall link the Google login to the existing account (same `users.id`) rather than creating a duplicate account or silently failing on the unique-email constraint.
 
 ---
 
@@ -615,6 +616,7 @@ Display appropriate messages for:
 - Network failure.
 - Expired session.
 - Unauthorized access.
+- Forgot Password requested for an account with `auth_provider = 'google'` (no local password exists): display "This account uses Google Sign-In. Please continue with Google to log in." instead of sending a reset email.
 
 ---
 
@@ -998,6 +1000,7 @@ Priority: Medium
 - Deleted tasks cannot be recovered in MVP.
 - Completed tasks remain visible until filtered.
 - Due dates cannot be in the past during creation.
+- The past-due restriction applies only at creation. Editing an existing task whose due date has already passed is allowed without re-validating the due date, so users can update notes, priority, or status on overdue tasks.
 - Estimated study time must be positive.
 
 ---
@@ -1399,6 +1402,8 @@ Daily goal reminders.
 
 Notifications follow user preferences configured in Settings.
 
+In the MVP, notification preferences are a single global on/off toggle (`user_preferences.notifications_enabled`) — there is no per-category control (e.g., disabling task reminders while keeping goal reminders). Per-category notification preferences are deferred to Version 2.
+
 ---
 
 ## 22.4 Acceptance Criteria
@@ -1543,6 +1548,7 @@ Priority: Medium
 - Users may edit only their own profile.
 - Email address cannot be modified after registration (MVP).
 - Profile changes should be reflected immediately throughout the application.
+- In the MVP, a profile picture is set either automatically from the user's Google account (for Google Sign-In users) or by supplying an external image URL. Direct file upload is not available in the MVP — cloud file storage (e.g., Cloudinary) is a Version 2 enhancement (see 12-NonGoals.md §3.11 and 11-ProductFeatures.md §19).
 
 ---
 
@@ -2329,6 +2335,23 @@ The first production release shall include:
 
 ---
 
+## Gamification (Basic)
+
+- Daily Streak
+- Achievement Badges
+- Rewards System
+- User Avatar
+- Milestone Celebrations
+
+---
+
+## AI Assistant (Basic)
+
+- AI Schedule Optimization
+- AI Study Time Estimation
+
+---
+
 ## Profile
 
 - User Information
@@ -2351,9 +2374,9 @@ Version 2 introduces intelligent productivity improvements.
 
 Planned features include:
 
-- AI Planner
-- AI Time Estimation
+- AI Daily Planner
 - AI Productivity Suggestions
+- AI Goal Refinement
 - Productivity Score
 - Advanced Analytics
 - Smart Notifications
