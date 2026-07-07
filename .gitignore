@@ -1,0 +1,57 @@
+# =========================================
+# StudySync — Root .gitignore
+# Monorepo: frontend (Next.js) + backend (Node.js/Express) + docs
+# =========================================
+
+# ---- Node.js ----
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+.pnpm-store/
+
+# ---- Next.js ----
+.next/
+out/
+
+# ---- Environment variables ----
+.env
+.env.*
+!.env.example
+
+# ---- Logs ----
+logs/
+*.log
+
+# ---- Operating System ----
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- Editor / IDE ----
+.vscode/settings.json
+.idea/
+*.swp
+*.swo
+
+# ---- Build output ----
+dist/
+build/
+
+# ---- Test coverage ----
+coverage/
+
+# ---- Cache folders ----
+.cache/
+.eslintcache
+*.cache
+
+# ---- Temporary files ----
+*.tmp
+*.temp
+
+# ---- Misc ----
+*.tsbuildinfo
+.vercel
+.turbo/
