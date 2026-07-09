@@ -27,7 +27,12 @@ export function TaskItem({ task, onToggle, compact = false }) {
 
       <div className="min-w-0 flex-1">
         <div className="flex flex-wrap items-center gap-2">
-          <p className={cn("font-medium text-[var(--fg)]", isDone && "text-[var(--fg-muted)] line-through")}>
+          <p
+            className={cn(
+              "font-medium text-[var(--fg)]",
+              isDone && "text-[var(--fg-muted)] line-through"
+            )}
+          >
             {task.title}
           </p>
           <Badge tone={PRIORITY_TONE[task.priority]}>{task.priority}</Badge>

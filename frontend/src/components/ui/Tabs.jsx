@@ -13,14 +13,21 @@ export function Tabs({ tabs, defaultTab, onChange, className }) {
   };
 
   return (
-    <div className={cn("inline-flex items-center gap-1 rounded-sm bg-[var(--border)]/40 p-1", className)}>
+    <div
+      className={cn(
+        "inline-flex items-center gap-1 rounded-sm bg-[var(--border)]/40 p-1",
+        className
+      )}
+    >
       {tabs.map((tab) => (
         <button
           key={tab.value}
           onClick={() => select(tab.value)}
           className={cn(
             "relative rounded-sm px-3.5 py-1.5 text-sm font-medium transition-colors",
-            active === tab.value ? "text-primary-foreground" : "text-[var(--fg-muted)] hover:text-[var(--fg)]"
+            active === tab.value
+              ? "text-primary-foreground"
+              : "text-[var(--fg-muted)] hover:text-[var(--fg)]"
           )}
         >
           {active === tab.value && (

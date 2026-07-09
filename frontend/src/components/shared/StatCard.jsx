@@ -11,7 +11,9 @@ const TONES = {
 export function StatCard({ icon: Icon, label, value, hint, tone = "primary" }) {
   return (
     <Card className="flex items-center gap-4">
-      <div className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-sm ${TONES[tone]}`}>
+      <div
+        className={`flex h-11 w-11 shrink-0 items-center justify-center rounded-sm ${TONES[tone]}`}
+      >
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0">

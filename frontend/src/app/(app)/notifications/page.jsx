@@ -24,7 +24,11 @@ export default function NotificationsPage() {
     <div>
       <PageHeader
         title="Notifications"
-        description={unreadCount > 0 ? `You have ${unreadCount} unread notifications.` : "You're all caught up."}
+        description={
+          unreadCount > 0
+            ? `You have ${unreadCount} unread notifications.`
+            : "You're all caught up."
+        }
         action={
           unreadCount > 0 && (
             <Button variant="secondary" size="sm" onClick={markAllRead}>

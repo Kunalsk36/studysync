@@ -16,9 +16,7 @@ export default function NotFound() {
         <Button href="/" variant="secondary">
           Go to Landing Page
         </Button>
-        <Button href="/dashboard">
-          Go to Dashboard
-        </Button>
+        <Button href="/dashboard">Go to Dashboard</Button>
       </div>
       <Link href="/" className="sr-only">
         Home

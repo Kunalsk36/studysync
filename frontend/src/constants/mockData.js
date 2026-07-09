@@ -247,7 +247,7 @@ export const NOTIFICATIONS = [
     id: 5,
     type: "task",
     title: "Task Reminder",
-    message: "\"Revise DSA Arrays\" is due tomorrow.",
+    message: '"Revise DSA Arrays" is due tomorrow.',
     time: "Yesterday",
     read: true,
   },

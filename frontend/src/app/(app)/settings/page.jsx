@@ -59,8 +59,8 @@ export default function SettingsPage() {
             />
             <Switch label="Sound effects" checked={soundEnabled} onChange={setSoundEnabled} />
             <p className="text-xs text-[var(--fg-muted)]">
-              Notification preferences apply globally in the MVP — per-category controls are planned for
-              Version 2.
+              Notification preferences apply globally in the MVP — per-category controls are planned
+              for Version 2.
             </p>
           </div>
         </Card>
@@ -96,8 +96,8 @@ export default function SettingsPage() {
 
       <Modal open={deleteOpen} onClose={() => setDeleteOpen(false)} title="Delete your account?">
         <p className="text-sm text-[var(--fg-muted)]">
-          This will permanently remove your tasks, goals, analytics, and achievements. This action cannot
-          be undone.
+          This will permanently remove your tasks, goals, analytics, and achievements. This action
+          cannot be undone.
         </p>
         <div className="mt-6 flex justify-end gap-3">
           <Button variant="secondary" onClick={() => setDeleteOpen(false)}>

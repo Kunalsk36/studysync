@@ -1,0 +1,18 @@
+# Dependencies & build output
+node_modules/
+.next/
+out/
+dist/
+build/
+coverage/
+
+# Lockfiles
+package-lock.json
+
+# Documentation is hand-formatted prose — do not auto-reformat
+docs/**/*.md
+*.md
+
+# Environment / misc
+.env
+.env.*

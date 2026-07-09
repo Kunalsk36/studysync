@@ -15,9 +15,24 @@ export default function AchievementsPage() {
       />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <StatCard icon={Trophy} label="Badges Earned" value={`${earnedCount} / ${ACHIEVEMENTS.length}`} tone="primary" />
-        <StatCard icon={Flame} label="Current Streak" value={`${ANALYTICS.studyStreak} days`} tone="warning" />
-        <StatCard icon={Flame} label="Longest Streak" value={`${ANALYTICS.longestStreak} days`} tone="danger" />
+        <StatCard
+          icon={Trophy}
+          label="Badges Earned"
+          value={`${earnedCount} / ${ACHIEVEMENTS.length}`}
+          tone="primary"
+        />
+        <StatCard
+          icon={Flame}
+          label="Current Streak"
+          value={`${ANALYTICS.studyStreak} days`}
+          tone="warning"
+        />
+        <StatCard
+          icon={Flame}
+          label="Longest Streak"
+          value={`${ANALYTICS.longestStreak} days`}
+          tone="danger"
+        />
       </div>
 
       <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">

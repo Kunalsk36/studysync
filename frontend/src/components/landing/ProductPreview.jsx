@@ -37,7 +37,10 @@ export function ProductPreview() {
               { label: "Revise DSA Arrays", done: false },
               { label: "Update Resume", done: true },
             ].map((t) => (
-              <div key={t.label} className="flex items-center gap-2.5 rounded-sm bg-[var(--background)] px-3 py-2.5">
+              <div
+                key={t.label}
+                className="flex items-center gap-2.5 rounded-sm bg-[var(--background)] px-3 py-2.5"
+              >
                 <CheckCircle2
                   className={`h-4 w-4 ${t.done ? "text-success" : "text-[var(--fg-muted)]"}`}
                 />

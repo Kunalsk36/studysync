@@ -23,11 +23,24 @@ export default function ProfilePage() {
 
   return (
     <div>
-      <PageHeader title="Profile" description="Manage your personal information and productivity goals." />
+      <PageHeader
+        title="Profile"
+        description="Manage your personal information and productivity goals."
+      />
 
       <div className="mb-6 grid grid-cols-2 gap-4 sm:grid-cols-3">
-        <StatCard icon={Flame} label="Study Streak" value={`${ANALYTICS.studyStreak} days`} tone="warning" />
-        <StatCard icon={ListChecks} label="Tasks Completed" value={ANALYTICS.completedTasks} tone="success" />
+        <StatCard
+          icon={Flame}
+          label="Study Streak"
+          value={`${ANALYTICS.studyStreak} days`}
+          tone="warning"
+        />
+        <StatCard
+          icon={ListChecks}
+          label="Tasks Completed"
+          value={ANALYTICS.completedTasks}
+          tone="success"
+        />
         <StatCard
           icon={Trophy}
           label="Achievements"
@@ -54,7 +67,12 @@ export default function ProfilePage() {
             <CardTitle>Personal Information</CardTitle>
           </CardHeader>
           <form onSubmit={handleSave} className="space-y-4">
-            <Input label="Full name" value={name} onChange={(e) => setName(e.target.value)} maxLength={100} />
+            <Input
+              label="Full name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              maxLength={100}
+            />
             <Input label="Email address" value={CURRENT_USER.email} disabled />
             <div className="grid grid-cols-2 gap-4">
               <Input

@@ -6,8 +6,7 @@ import { Loader2 } from "lucide-react";
 import { cn } from "@/utils/cn";
 
 const VARIANTS = {
-  primary:
-    "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm shadow-primary/20",
+  primary: "bg-primary text-primary-foreground hover:bg-primary/90 shadow-sm shadow-primary/20",
   secondary:
     "bg-[var(--surface)] text-[var(--fg)] border border-[var(--border)] hover:bg-[var(--border)]/40",
   ghost: "text-[var(--fg)] hover:bg-[var(--border)]/40",

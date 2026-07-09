@@ -1,11 +1,11 @@
 # Changelog
 
 **Project:** StudySync
-**Version:** 1.0.1
+**Version:** 1.1.0
 **Status:** Active Development
 **Author:** Kunal Shrikant Kavathekar
 **Created:** 2026-07-06
-**Last Updated:** 2026-07-07
+**Last Updated:** 2026-07-09
 
 ---
 
@@ -35,6 +35,37 @@ Example:
 - **MAJOR** – Significant changes or breaking updates.
 - **MINOR** – New features and enhancements.
 - **PATCH** – Bug fixes, documentation updates, and minor improvements.
+
+---
+
+# [1.1.0] - 2026-07-09
+
+## Added
+
+### Frontend
+
+- Committed the high-fidelity frontend prototype: Next.js App Router, Tailwind CSS design tokens, Framer Motion, all 15 MVP pages (Landing, Login, Register, Dashboard, Tasks, Calendar, Pomodoro, Study Goals, Analytics, Notifications, Achievements, AI Assistant, Profile, Settings, 404) with realistic mock data.
+
+### Tooling
+
+- Configured Prettier at the repository root, integrated with the frontend's ESLint setup via `eslint-config-prettier`.
+
+### Backend
+
+- Initialized the Express backend with the full layered folder structure defined in `07-ProjectStructure.md` (`config/`, `routes/`, `controllers/`, `services/`, `repositories/`, `middleware/`, `models/`, `validations/`, `utils/`, `constants/`, `database/`, `jobs/`) and a `server.js` entry point.
+- Configured Express with `dotenv`, JSON/URL-encoded body parsing, CORS, and centralized configuration loading.
+- Installed and configured `mysql2` with a connection pool and startup connection verification (no tables or migrations — Phase 1 scope only).
+- Installed `joi` and established the `validations/` folder structure (no schemas yet).
+- Configured structured logging via `winston`, per the logging strategy decided in `02-TechSpec.md` §7.1.
+- Added the `/health` endpoint (routed through controller → service) as the only API endpoint in this phase.
+
+### Environment
+
+- Populated `.env.example` with all documented placeholders: `PORT`, `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `JWT_SECRET`, `GOOGLE_CLIENT_ID`, `GOOGLE_CLIENT_SECRET`, `AI_PROVIDER`, `FRONTEND_URL`.
+
+## Changed
+
+- Phase 1 – Project Initialization marked complete in `10-Tracker.md`.
 
 ---
 

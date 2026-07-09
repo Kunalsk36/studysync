@@ -42,12 +42,7 @@ export default function RegisterPage() {
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input label="Full name" type="text" placeholder="Kunal Kavathekar" required />
           <Input label="Email address" type="email" placeholder="you@example.com" required />
-          <Input
-            label="Password"
-            type="password"
-            placeholder="Min. 8 characters"
-            required
-          />
+          <Input label="Password" type="password" placeholder="Min. 8 characters" required />
           <Button type="submit" size="lg" className="w-full" loading={loading}>
             Create Account
           </Button>

@@ -40,7 +40,9 @@ export default function DashboardPage() {
 
   const toggleTask = (id) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, status: t.status === "completed" ? "pending" : "completed" } : t))
+      prev.map((t) =>
+        t.id === id ? { ...t, status: t.status === "completed" ? "pending" : "completed" } : t
+      )
     );
   };
 
@@ -69,10 +71,30 @@ export default function DashboardPage() {
 
       {/* Stats */}
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard icon={Clock} label="Study Hours Today" value={`${ANALYTICS.studyHoursToday}h`} tone="primary" />
-        <StatCard icon={Flame} label="Study Streak" value={`${ANALYTICS.studyStreak} days`} tone="warning" />
-        <StatCard icon={ListTodo} label="Tasks Completed" value={ANALYTICS.completedTasks} tone="success" />
-        <StatCard icon={Target} label="Weekly Progress" value={`${ANALYTICS.completionPercentage}%`} tone="info" />
+        <StatCard
+          icon={Clock}
+          label="Study Hours Today"
+          value={`${ANALYTICS.studyHoursToday}h`}
+          tone="primary"
+        />
+        <StatCard
+          icon={Flame}
+          label="Study Streak"
+          value={`${ANALYTICS.studyStreak} days`}
+          tone="warning"
+        />
+        <StatCard
+          icon={ListTodo}
+          label="Tasks Completed"
+          value={ANALYTICS.completedTasks}
+          tone="success"
+        />
+        <StatCard
+          icon={Target}
+          label="Weekly Progress"
+          value={`${ANALYTICS.completionPercentage}%`}
+          tone="info"
+        />
       </div>
 
       <div className="grid gap-6 lg:grid-cols-3">

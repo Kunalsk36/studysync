@@ -15,7 +15,10 @@ export function ProgressBar({ value = 0, tone = "primary", className, trackClass
   const pct = Math.min(100, Math.max(0, value));
   return (
     <div
-      className={cn("h-2 w-full overflow-hidden rounded-full bg-[var(--border)]/60", trackClassName)}
+      className={cn(
+        "h-2 w-full overflow-hidden rounded-full bg-[var(--border)]/60",
+        trackClassName
+      )}
     >
       <motion.div
         initial={{ width: 0 }}

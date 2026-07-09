@@ -82,7 +82,13 @@ export default function PomodoroPage() {
 
           <div className="relative my-10 flex h-56 w-56 items-center justify-center">
             <svg className="absolute h-full w-full -rotate-90">
-              <circle cx="112" cy="112" r="88" strokeWidth="10" className="fill-none stroke-[var(--border)]" />
+              <circle
+                cx="112"
+                cy="112"
+                r="88"
+                strokeWidth="10"
+                className="fill-none stroke-[var(--border)]"
+              />
               <motion.circle
                 cx="112"
                 cy="112"
@@ -123,7 +129,10 @@ export default function PomodoroPage() {
           </CardHeader>
           <div className="space-y-3">
             {POMODORO_HISTORY.map((session) => (
-              <div key={session.id} className="flex items-center justify-between rounded-md border border-[var(--border)] p-3">
+              <div
+                key={session.id}
+                className="flex items-center justify-between rounded-md border border-[var(--border)] p-3"
+              >
                 <div>
                   <p className="text-sm font-medium text-[var(--fg)]">
                     {SESSION_LABELS[session.type].label}

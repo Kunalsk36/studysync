@@ -22,7 +22,8 @@ const FEATURES = [
   {
     icon: ListTodo,
     title: "Task Management",
-    description: "Organize work by subject, priority, and deadline — with subtasks and tags built in.",
+    description:
+      "Organize work by subject, priority, and deadline — with subtasks and tags built in.",
   },
   {
     icon: CalendarDays,
@@ -32,7 +33,8 @@ const FEATURES = [
   {
     icon: Timer,
     title: "Pomodoro Timer",
-    description: "Focused work sessions with short and long breaks that log your study hours automatically.",
+    description:
+      "Focused work sessions with short and long breaks that log your study hours automatically.",
   },
   {
     icon: BarChart3,
@@ -47,7 +49,8 @@ const FEATURES = [
   {
     icon: Sparkles,
     title: "AI Assistant",
-    description: "Get an optimized study schedule and time estimates — you stay in control of every change.",
+    description:
+      "Get an optimized study schedule and time estimates — you stay in control of every change.",
   },
 ];
 
@@ -139,9 +142,9 @@ export default function LandingPage() {
               transition={{ duration: 0.5, delay: 0.2 }}
               className="mx-auto mt-5 max-w-xl text-lg text-[var(--fg-muted)]"
             >
-              StudySync brings task management, calendar, Pomodoro sessions, and progress
-              analytics into a single focused workspace — so you spend less time managing tools
-              and more time learning.
+              StudySync brings task management, calendar, Pomodoro sessions, and progress analytics
+              into a single focused workspace — so you spend less time managing tools and more time
+              learning.
             </motion.p>
 
             <motion.div
@@ -169,7 +172,9 @@ export default function LandingPage() {
         <section id="features" className="px-4 py-20 sm:px-6">
           <div className="mx-auto max-w-6xl">
             <FadeIn className="mx-auto max-w-2xl text-center">
-              <h2 className="text-3xl font-bold text-[var(--fg)]">Everything you need to stay consistent</h2>
+              <h2 className="text-3xl font-bold text-[var(--fg)]">
+                Everything you need to stay consistent
+              </h2>
               <p className="mt-3 text-[var(--fg-muted)]">
                 One workspace instead of six disconnected apps.
               </p>
@@ -214,7 +219,9 @@ export default function LandingPage() {
         {/* CTA */}
         <section className="px-4 py-20 sm:px-6">
           <FadeIn className="mx-auto max-w-3xl rounded-lg bg-primary px-8 py-14 text-center shadow-xl shadow-primary/20">
-            <h2 className="text-3xl font-bold text-white">Start building consistent study habits today</h2>
+            <h2 className="text-3xl font-bold text-white">
+              Start building consistent study habits today
+            </h2>
             <p className="mx-auto mt-3 max-w-md text-primary-foreground/80">
               Free to use. No credit card required.
             </p>

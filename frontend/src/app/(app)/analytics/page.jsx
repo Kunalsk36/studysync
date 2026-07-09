@@ -19,11 +19,24 @@ export default function AnalyticsPage() {
 
   return (
     <div>
-      <PageHeader title="Analytics" description="Understand your productivity patterns over time." />
+      <PageHeader
+        title="Analytics"
+        description="Understand your productivity patterns over time."
+      />
 
       <div className="mb-6 grid grid-cols-2 gap-4 lg:grid-cols-4">
-        <StatCard icon={Flame} label="Current Streak" value={`${ANALYTICS.studyStreak} days`} tone="warning" />
-        <StatCard icon={CheckCircle2} label="Completed Tasks" value={ANALYTICS.completedTasks} tone="success" />
+        <StatCard
+          icon={Flame}
+          label="Current Streak"
+          value={`${ANALYTICS.studyStreak} days`}
+          tone="warning"
+        />
+        <StatCard
+          icon={CheckCircle2}
+          label="Completed Tasks"
+          value={ANALYTICS.completedTasks}
+          tone="success"
+        />
         <StatCard icon={XCircle} label="Missed Tasks" value={ANALYTICS.missedTasks} tone="danger" />
         <StatCard
           icon={Clock}
@@ -56,7 +69,13 @@ export default function AnalyticsPage() {
           <div className="flex flex-col items-center py-4">
             <div className="relative flex h-40 w-40 items-center justify-center">
               <svg className="absolute h-full w-full -rotate-90">
-                <circle cx="80" cy="80" r="64" strokeWidth="12" className="fill-none stroke-[var(--border)]" />
+                <circle
+                  cx="80"
+                  cy="80"
+                  r="64"
+                  strokeWidth="12"
+                  className="fill-none stroke-[var(--border)]"
+                />
                 <circle
                   cx="80"
                   cy="80"
@@ -71,7 +90,9 @@ export default function AnalyticsPage() {
                 />
               </svg>
               <div className="text-center">
-                <p className="text-3xl font-bold text-[var(--fg)]">{ANALYTICS.completionPercentage}%</p>
+                <p className="text-3xl font-bold text-[var(--fg)]">
+                  {ANALYTICS.completionPercentage}%
+                </p>
                 <p className="text-xs text-[var(--fg-muted)]">Completion</p>
               </div>
             </div>

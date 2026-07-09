@@ -31,7 +31,12 @@ export function AchievementCard({ achievement }) {
           <Lock className="h-6 w-6 text-[var(--fg-muted)]" />
         )}
       </div>
-      <p className={cn("mt-3 font-semibold", achievement.earned ? "text-[var(--fg)]" : "text-[var(--fg-muted)]")}>
+      <p
+        className={cn(
+          "mt-3 font-semibold",
+          achievement.earned ? "text-[var(--fg)]" : "text-[var(--fg-muted)]"
+        )}
+      >
         {achievement.title}
       </p>
       <p className="mt-1 text-xs text-[var(--fg-muted)]">{achievement.description}</p>

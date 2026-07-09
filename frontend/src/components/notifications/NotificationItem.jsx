@@ -31,7 +31,12 @@ export function NotificationItem({ notification, onMarkRead }) {
           : "border-primary/30 bg-primary/5"
       )}
     >
-      <div className={cn("flex h-10 w-10 shrink-0 items-center justify-center rounded-full", TONES[notification.type])}>
+      <div
+        className={cn(
+          "flex h-10 w-10 shrink-0 items-center justify-center rounded-full",
+          TONES[notification.type]
+        )}
+      >
         <Icon className="h-5 w-5" />
       </div>
       <div className="min-w-0 flex-1">

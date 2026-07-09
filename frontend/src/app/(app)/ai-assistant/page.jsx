@@ -24,7 +24,13 @@ export default function AiAssistantPage() {
     // Visual-only: simulates the "Generating Suggestions..." loading state (01-PRD.md §34).
     setTimeout(() => {
       setThread((prev) => [
-        { id: Date.now(), prompt: value, response: MOCK_RESPONSE, createdAt: "Just now", applied: null },
+        {
+          id: Date.now(),
+          prompt: value,
+          response: MOCK_RESPONSE,
+          createdAt: "Just now",
+          applied: null,
+        },
         ...prev,
       ]);
       setGenerating(false);
@@ -110,7 +116,9 @@ export default function AiAssistantPage() {
                   </Button>
                 </div>
               ) : (
-                <span className={`text-xs font-medium ${item.applied ? "text-success" : "text-[var(--fg-muted)]"}`}>
+                <span
+                  className={`text-xs font-medium ${item.applied ? "text-success" : "text-[var(--fg-muted)]"}`}
+                >
                   {item.applied ? "Applied to schedule" : "Dismissed"}
                 </span>
               )}

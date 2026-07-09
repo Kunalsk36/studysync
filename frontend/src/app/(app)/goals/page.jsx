@@ -25,7 +25,9 @@ export default function GoalsPage() {
         }
       />
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Active</h2>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--fg-muted)]">
+        Active
+      </h2>
       <div className="mb-8 grid gap-4 sm:grid-cols-2">
         {active.map((goal) => {
           const pct = Math.round((goal.completedHours / goal.targetHours) * 100);
@@ -53,7 +55,9 @@ export default function GoalsPage() {
         })}
       </div>
 
-      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--fg-muted)]">Completed</h2>
+      <h2 className="mb-3 text-sm font-semibold uppercase tracking-wide text-[var(--fg-muted)]">
+        Completed
+      </h2>
       <div className="grid gap-4 sm:grid-cols-2">
         {completed.map((goal) => (
           <Card key={goal.id} className="opacity-75">

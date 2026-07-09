@@ -27,7 +27,9 @@ export default function TasksPage() {
 
   const toggleTask = (id) => {
     setTasks((prev) =>
-      prev.map((t) => (t.id === id ? { ...t, status: t.status === "completed" ? "pending" : "completed" } : t))
+      prev.map((t) =>
+        t.id === id ? { ...t, status: t.status === "completed" ? "pending" : "completed" } : t
+      )
     );
   };
 
