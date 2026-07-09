@@ -1,20 +1,35 @@
 "use client";
 
 import { useState } from "react";
+import { useRouter } from "next/navigation";
 import Link from "next/link";
 import { AuthLayout } from "@/components/auth/AuthLayout";
-import { GoogleButton } from "@/components/auth/GoogleButton";
+import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
+import { useAuth } from "@/context/AuthContext";
 
 export default function LoginPage() {
+  const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const { login } = useAuth();
+  const router = useRouter();
 
-  const handleSubmit = (e) => {
+  const handleChange = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    setError("");
     setLoading(true);
-    // Visual-only: this is a prototype, there is no authentication API.
-    setTimeout(() => setLoading(false), 1200);
+    try {
+      await login(form);
+      router.push("/dashboard");
+    } catch (err) {
+      setError(err.message || "Something went wrong. Please try again.");
+    } finally {
+      setLoading(false);
+    }
   };
 
   return (
@@ -31,7 +46,7 @@ export default function LoginPage() {
       }
     >
       <div className="space-y-4">
-        <GoogleButton>Continue with Google</GoogleButton>
+        <GoogleSignInButton onError={setError} />
 
         <div className="flex items-center gap-3">
           <div className="h-px flex-1 bg-[var(--border)]" />
@@ -39,12 +54,35 @@ export default function LoginPage() {
           <div className="h-px flex-1 bg-[var(--border)]" />
         </div>
 
+        {error && (
+          <div className="rounded-sm border border-danger/30 bg-danger/10 px-3.5 py-2.5 text-sm text-danger">
+            {error}
+          </div>
+        )}
+
         <form onSubmit={handleSubmit} className="space-y-4">
-          <Input label="Email address" type="email" placeholder="you@example.com" required />
+          <Input
+            label="Email address"
+            type="email"
+            placeholder="you@example.com"
+            value={form.email}
+            onChange={handleChange("email")}
+            required
+          />
           <div>
-            <Input label="Password" type="password" placeholder="••••••••" required />
+            <Input
+              label="Password"
+              type="password"
+              placeholder="••••••••"
+              value={form.password}
+              onChange={handleChange("password")}
+              required
+            />
             <div className="mt-2 text-right">
-              <Link href="#" className="text-xs font-medium text-primary hover:underline">
+              <Link
+                href="/forgot-password"
+                className="text-xs font-medium text-primary hover:underline"
+              >
                 Forgot password?
               </Link>
             </div>

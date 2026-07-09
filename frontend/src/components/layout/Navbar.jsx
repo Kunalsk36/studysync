@@ -8,10 +8,27 @@ import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Avatar } from "@/components/ui/Avatar";
 import { CURRENT_USER, NOTIFICATIONS } from "@/constants/mockData";
 import { USER_MENU_ITEMS } from "@/constants/navigation";
+import { useAuth } from "@/context/AuthContext";
+
+function initialsOf(name) {
+  if (!name) return "SS";
+  return name
+    .split(" ")
+    .map((part) => part[0])
+    .slice(0, 2)
+    .join("")
+    .toUpperCase();
+}
 
 export function Navbar({ onMenuClick }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const unreadCount = NOTIFICATIONS.filter((n) => !n.read).length;
+  const { user, logout } = useAuth();
+  // Falls back to mock data only for fields the auth response doesn't carry
+  // (e.g. avatar/email display) so the rest of the still-mock-data
+  // dashboard isn't affected by this phase.
+  const displayName = user?.fullName || CURRENT_USER.name;
+  const displayEmail = user?.email || CURRENT_USER.email;
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-[var(--border)] bg-[var(--surface)]/90 px-4 backdrop-blur sm:px-6">
@@ -48,7 +65,7 @@ export function Navbar({ onMenuClick }) {
             onClick={() => setUserMenuOpen((o) => !o)}
             className="flex items-center gap-2 rounded-sm border border-[var(--border)] py-1 pl-1 pr-2.5 hover:bg-[var(--border)]/40"
           >
-            <Avatar initials={CURRENT_USER.avatarInitials} size="sm" />
+            <Avatar initials={initialsOf(displayName)} size="sm" />
             <ChevronDown className="h-4 w-4 text-[var(--fg-muted)]" />
           </button>
 
@@ -64,8 +81,8 @@ export function Navbar({ onMenuClick }) {
                   className="absolute right-0 z-20 mt-2 w-56 rounded-md border border-[var(--border)] bg-[var(--surface)] p-2 shadow-lg"
                 >
                   <div className="px-2.5 py-2">
-                    <p className="text-sm font-medium text-[var(--fg)]">{CURRENT_USER.name}</p>
-                    <p className="text-xs text-[var(--fg-muted)]">{CURRENT_USER.email}</p>
+                    <p className="text-sm font-medium text-[var(--fg)]">{displayName}</p>
+                    <p className="text-xs text-[var(--fg-muted)]">{displayEmail}</p>
                   </div>
                   <div className="my-1 h-px bg-[var(--border)]" />
                   {USER_MENU_ITEMS.map((item) => (
@@ -80,13 +97,16 @@ export function Navbar({ onMenuClick }) {
                     </Link>
                   ))}
                   <div className="my-1 h-px bg-[var(--border)]" />
-                  <Link
-                    href="/"
-                    className="flex items-center gap-2.5 rounded-sm px-2.5 py-2 text-sm text-danger hover:bg-danger/10"
+                  <button
+                    onClick={() => {
+                      setUserMenuOpen(false);
+                      logout();
+                    }}
+                    className="flex w-full items-center gap-2.5 rounded-sm px-2.5 py-2 text-left text-sm text-danger hover:bg-danger/10"
                   >
                     <LogOut className="h-4 w-4" />
                     Logout
-                  </Link>
+                  </button>
                 </motion.div>
               </>
             )}

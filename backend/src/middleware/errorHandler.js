@@ -8,9 +8,16 @@ const { config } = require("../config");
  */
 // eslint-disable-next-line no-unused-vars
 function errorHandler(err, req, res, next) {
-  logger.error(err.message, { stack: err.stack, path: req.originalUrl });
-
   const statusCode = err.statusCode || 500;
+
+  // Expected client errors (4xx — wrong password, duplicate email, etc.)
+  // are normal control flow, not application failures — only 5xx warrants
+  // an `error`-level log with a stack trace.
+  if (statusCode >= 500) {
+    logger.error(err.message, { stack: err.stack, path: req.originalUrl });
+  } else {
+    logger.debug(`${statusCode} ${req.method} ${req.originalUrl}: ${err.message}`);
+  }
 
   res.status(statusCode).json({
     success: false,

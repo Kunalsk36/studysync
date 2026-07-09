@@ -1,11 +1,11 @@
 # Changelog
 
 **Project:** StudySync
-**Version:** 1.1.0
+**Version:** 1.2.0
 **Status:** Active Development
 **Author:** Kunal Shrikant Kavathekar
 **Created:** 2026-07-06
-**Last Updated:** 2026-07-09
+**Last Updated:** 2026-07-10
 
 ---
 
@@ -35,6 +35,43 @@ Example:
 - **MAJOR** – Significant changes or breaking updates.
 - **MINOR** – New features and enhancements.
 - **PATCH** – Bug fixes, documentation updates, and minor improvements.
+
+---
+
+# [1.2.0] - 2026-07-10
+
+## Added
+
+### Database
+
+- Created `users`, `user_preferences`, and `user_sessions` tables in the real `studysync` MySQL database via versioned migrations (`001_create_users.sql`, `002_create_user_preferences.sql`, `003_create_user_sessions.sql`), matching `04-DatabaseSchema.md` exactly.
+
+### Backend
+
+- Implemented the complete Phase 2 Authentication module: `POST /api/auth/register`, `/login`, `/google`, `/logout`, `/forgot-password`, `/reset-password`, and `GET /api/auth/me`.
+- JWT authentication via httpOnly cookie (Secure in production, SameSite=Lax, 7-day expiry, stateless verification).
+- Google Sign-In verified server-side via `google-auth-library`.
+- bcrypt password hashing (12 salt rounds), Joi request validation, `express-rate-limit` on Register/Login/Forgot Password (10 requests/15 min/IP).
+- Password reset via Nodemailer with an auto-provisioned Ethereal Email test inbox (provider-independent — swaps to a real SMTP provider via env vars with no code changes).
+- `authenticate` middleware (JWT + user-existence check) protecting authenticated routes; `user_sessions` records login history only, per the approved session model.
+
+### Frontend
+
+- `AuthContext` and `authService` added (mirrors the existing `ThemeContext` pattern).
+- Login and Register pages wired to real authentication (previously visual-only).
+- New Forgot Password and Reset Password pages.
+- Google Identity Services integrated directly (official SDK) via a `GoogleSignInButton` component.
+- Route protection via Next.js `middleware.js` plus a client-side guard in `(app)/layout.jsx`.
+- Navbar logout wired to real session termination.
+
+## Fixed
+
+- Corrected the shared error handler logging expected 4xx client errors (e.g. wrong password) at `error` severity with full stack traces — now only 5xx failures log that way.
+
+## Known Limitations
+
+- The approved `SameSite=Lax` cookie setting works for local development but will not survive cross-domain `fetch()` calls once frontend and backend are deployed to different domains (Vercel/Railway) — needs a decision before Phase 15 (Deployment).
+- Google Sign-In's success path requires a real browser-issued Google ID token and could not be fully exercised in this environment; validated for input handling and invalid-token rejection instead.
 
 ---
 

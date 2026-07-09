@@ -22,11 +22,31 @@ const config = {
 
   jwt: {
     secret: process.env.JWT_SECRET || "",
+    // Approved decision: 7 days, no refresh tokens in MVP.
+    expiresIn: "7d",
+    cookieMaxAgeMs: 7 * 24 * 60 * 60 * 1000,
+  },
+
+  cookie: {
+    name: "studysync_token",
+    // Approved decision: httpOnly cookie, Secure in production, SameSite=Lax.
+    secure: process.env.NODE_ENV === "production",
+    sameSite: "lax",
   },
 
   google: {
     clientId: process.env.GOOGLE_CLIENT_ID || "",
     clientSecret: process.env.GOOGLE_CLIENT_SECRET || "",
+  },
+
+  mail: {
+    // Provider-independent: only these four values are read by utils/mailer.js.
+    // Ethereal Email (https://ethereal.email) for MVP/dev; swap the SMTP_*
+    // values for a real provider later without touching any calling code.
+    host: process.env.SMTP_HOST || "",
+    port: Number(process.env.SMTP_PORT) || 587,
+    user: process.env.SMTP_USER || "",
+    password: process.env.SMTP_PASSWORD || "",
   },
 
   ai: {
