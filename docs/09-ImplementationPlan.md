@@ -78,6 +78,27 @@ Following the same workflow for every feature ensures consistency and simplifies
 
 The StudySync project is divided into the following implementation phases.
 
+> **Implementation Order Note:**
+> Although Dashboard is listed as Phase 4 from a product perspective, its backend integration will be completed after the core productivity modules because it depends on data produced by those modules.
+> 
+> The new engineering implementation order should be:
+> Phase 1 – Project Initialization
+> Phase 2 – Authentication
+> Phase 3 – Application Layout
+> Phase 5 – Task Management
+> Phase 6 – Calendar
+> Phase 7 – Pomodoro
+> Phase 8 – Study Goals
+> Phase 9 – Notifications
+> Phase 10 – Gamification
+> Phase 4 – Dashboard Integration
+> Phase 11 – AI Assistant
+> Phase 12 – User Profile
+> Phase 13 – Settings
+> Phase 14 – Testing & Bug Fixes
+> Phase 15 – Deployment
+> Phase 16 – Documentation & Project Completion
+
 | Phase    | Module                             |
 | -------- | ---------------------------------- |
 | Phase 1  | Project Initialization             |

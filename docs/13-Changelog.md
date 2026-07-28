@@ -38,6 +38,17 @@ Example:
 
 ---
 
+# [1.3.1] - 2026-07-28
+
+## Changed
+
+### Project Planning
+
+- Updated engineering implementation order: Phase 4 (Dashboard) integration is deferred until after Phase 10 (Gamification) because it depends on data produced by core productivity modules.
+- Phase 5 (Task Management) is now the active development phase.
+
+---
+
 # [1.3.0] - 2026-07-28
 
 ## Changed

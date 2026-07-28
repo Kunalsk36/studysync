@@ -58,13 +58,13 @@ Unlike the Implementation Plan, which defines what should be built, this tracker
 | Phase 1 – Project Initialization | 🟩     |
 | Phase 2 – Authentication         | 🟩     |
 | Phase 3 – Application Layout     | 🟩     |
-| Phase 4 – Dashboard              | ⬜     |
 | Phase 5 – Task Management        | ⬜     |
 | Phase 6 – Calendar               | ⬜     |
 | Phase 7 – Pomodoro Timer         | ⬜     |
 | Phase 8 – Study Goals            | ⬜     |
 | Phase 9 – Notifications          | ⬜     |
 | Phase 10 – Gamification          | ⬜     |
+| Phase 4 – Dashboard              | ⬜     |
 | Phase 11 – AI Assistant          | ⬜     |
 | Phase 12 – User Profile          | ⬜     |
 | Phase 13 – Settings              | ⬜     |
@@ -80,7 +80,7 @@ Current Priority:
 
 - Phase 3 – Application Layout complete: validated against existing frontend prototype containing global layout, sidebar, navbar, footer, theme switching, and responsive routing.
 - Shared UI components (Toast, Dialog, Dropdown, Loading) are deferred until first use.
-- Begin Phase 4 – Dashboard.
+- Begin Phase 5 – Task Management. (Phase 4 Dashboard is deferred until core modules are complete).
 
 ---
 
@@ -152,7 +152,7 @@ Current Priority:
 
 ## Development
 
-- [ ] Phase 4 – Dashboard (not started)
+- [ ] Phase 5 – Task Management (not started)
 
 ---
 
