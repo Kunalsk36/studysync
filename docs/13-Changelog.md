@@ -38,6 +38,18 @@ Example:
 
 ---
 
+# [1.3.0] - 2026-07-28
+
+## Changed
+
+### Project Planning
+
+- Phase 3 officially completed.
+- Layout implementation validated against the existing frontend prototype.
+- Shared UI components (Toast Notifications, Dialog Component, Dropdown Component, Loading Component) deferred until first use.
+
+---
+
 # [1.2.0] - 2026-07-10
 
 ## Added
