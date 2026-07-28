@@ -44,6 +44,8 @@ Example:
 
 ### Task Management
 
+- Implemented Task Management Backend CRUD (Repository, Service, Controller, Routes).
+- Added Joi validation, category validation, and completion toggling.
 - Implemented Category Management Backend API (Repository, Service, Controller, Routes).
 - Added Joi validation and duplicate name checks.
 - Created database migrations for `task_categories`, `tasks`, and `subtasks` tables.
