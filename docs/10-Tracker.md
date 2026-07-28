@@ -58,7 +58,7 @@ Unlike the Implementation Plan, which defines what should be built, this tracker
 | Phase 1 – Project Initialization | 🟩     |
 | Phase 2 – Authentication         | 🟩     |
 | Phase 3 – Application Layout     | 🟩     |
-| Phase 5 – Task Management        | ⬜     |
+| Phase 5 – Task Management        | 🟨     |
 | Phase 6 – Calendar               | ⬜     |
 | Phase 7 – Pomodoro Timer         | ⬜     |
 | Phase 8 – Study Goals            | ⬜     |
@@ -152,7 +152,8 @@ Current Priority:
 
 ## Development
 
-- [ ] Phase 5 – Task Management (not started)
+- [/] Phase 5 – Task Management (in progress)
+  - [x] Task 1: Database Migrations (`task_categories`, `tasks`, `subtasks` tables)
 
 ---
 

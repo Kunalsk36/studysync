@@ -1,0 +1,13 @@
+-- 04-DatabaseSchema.md §13 — subtasks
+CREATE TABLE IF NOT EXISTS subtasks (
+  id           BIGINT UNSIGNED AUTO_INCREMENT PRIMARY KEY,
+  task_id      BIGINT UNSIGNED NOT NULL,
+  title        VARCHAR(150) NOT NULL,
+  is_completed BOOLEAN NOT NULL DEFAULT FALSE,
+  completed_at DATETIME NULL,
+  created_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,
+  updated_at   TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
+  INDEX idx_subtasks_task_id (task_id),
+  CONSTRAINT fk_subtasks_task_id
+    FOREIGN KEY (task_id) REFERENCES tasks(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;

@@ -40,6 +40,13 @@ Example:
 
 # [1.3.1] - 2026-07-28
 
+## Added
+
+### Task Management
+
+- Created database migrations for `task_categories`, `tasks`, and `subtasks` tables.
+- Applied schema updates and ran migrations successfully.
+
 ## Changed
 
 ### Project Planning

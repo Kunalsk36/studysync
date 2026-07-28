@@ -840,6 +840,7 @@ Stores smaller actionable items belonging to a parent task.
 | is_completed | BOOLEAN         | No       | FALSE             | Completion status |
 | completed_at | DATETIME        | Yes      | NULL              | Completion time   |
 | created_at   | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Creation time     |
+| updated_at   | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Last update       |
 
 ---
 
@@ -1529,6 +1530,7 @@ The following cascade actions should be applied.
 | Parent          | Child             | Action             |
 | --------------- | ----------------- | ------------------ |
 | users           | tasks             | ON DELETE CASCADE  |
+| users           | task_categories   | ON DELETE CASCADE  |
 | users           | calendar_events   | ON DELETE CASCADE  |
 | users           | study_goals       | ON DELETE CASCADE  |
 | users           | user_preferences  | ON DELETE CASCADE  |
