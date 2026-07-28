@@ -1,6 +1,7 @@
 const { Router } = require("express");
 const healthRoutes = require("./health.routes");
 const authRoutes = require("./auth.routes");
+const categoryRoutes = require("./category.routes");
 
 const router = Router();
 
@@ -13,5 +14,6 @@ router.use("/api/auth", authRoutes);
 
 // Remaining feature routers (tasks, calendar, ...) are mounted here in
 // later phases.
+router.use("/api/categories", categoryRoutes);
 
 module.exports = router;

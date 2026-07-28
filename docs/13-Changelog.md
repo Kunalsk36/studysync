@@ -44,6 +44,8 @@ Example:
 
 ### Task Management
 
+- Implemented Category Management Backend API (Repository, Service, Controller, Routes).
+- Added Joi validation and duplicate name checks.
 - Created database migrations for `task_categories`, `tasks`, and `subtasks` tables.
 - Applied schema updates and ran migrations successfully.
 
