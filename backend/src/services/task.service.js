@@ -41,8 +41,27 @@ async function createTask(userId, taskData) {
   return task;
 }
 
-async function getTasks(userId) {
-  return taskRepository.findAllByUserId(userId);
+async function getTasks(userId, queryOptions = {}) {
+  // Validate categoryId if passed as a filter
+  if (queryOptions.categoryId) {
+    await validateCategory(queryOptions.categoryId, userId);
+  }
+
+  const { data, total } = await taskRepository.findAllByUserId(userId, queryOptions);
+  
+  const page = queryOptions.page ? parseInt(queryOptions.page, 10) : 1;
+  const limit = queryOptions.limit ? parseInt(queryOptions.limit, 10) : 10;
+  const totalPages = Math.ceil(total / limit);
+
+  return {
+    data,
+    pagination: {
+      page,
+      limit,
+      total,
+      totalPages,
+    },
+  };
 }
 
 async function getTaskById(id, userId) {

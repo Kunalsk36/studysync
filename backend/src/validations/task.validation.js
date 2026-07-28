@@ -37,7 +37,21 @@ const updateSchema = Joi.object({
   color: Joi.string().max(20).allow(null, "").optional(),
 }).min(1);
 
+const querySchema = Joi.object({
+  search: Joi.string().allow("").optional(),
+  status: Joi.string().valid("pending", "in_progress", "completed").optional(),
+  priority: Joi.string().valid("low", "medium", "high").optional(),
+  categoryId: Joi.number().integer().positive().optional(),
+  completed: Joi.boolean().optional(),
+  dueDate: Joi.date().iso().optional(),
+  sortBy: Joi.string().valid("created_at", "updated_at", "due_date", "priority", "title").optional(),
+  order: Joi.string().valid("asc", "desc").optional(),
+  page: Joi.number().integer().min(1).optional(),
+  limit: Joi.number().integer().min(1).max(100).optional(),
+});
+
 module.exports = {
   createSchema,
   updateSchema,
+  querySchema,
 };

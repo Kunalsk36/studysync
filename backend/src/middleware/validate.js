@@ -3,9 +3,9 @@
  * routes stay declarative (`validate(loginSchema)`) per 05-API.md's
  * standard error envelope.
  */
-function validate(schema) {
+function validate(schema, source = "body") {
   return (req, res, next) => {
-    const { error, value } = schema.validate(req.body, {
+    const { error, value } = schema.validate(req[source], {
       abortEarly: false,
       stripUnknown: true,
     });
@@ -18,7 +18,7 @@ function validate(schema) {
       });
     }
 
-    req.body = value;
+    req[source] = value;
     next();
   };
 }

@@ -17,11 +17,12 @@ async function create(req, res, next) {
 async function getAll(req, res, next) {
   try {
     const userId = req.user.id;
-    const tasks = await taskService.getTasks(userId);
+    const { data, pagination } = await taskService.getTasks(userId, req.query);
     res.status(200).json({
       success: true,
       message: "Tasks retrieved successfully.",
-      data: tasks,
+      data,
+      pagination,
     });
   } catch (err) {
     next(err);

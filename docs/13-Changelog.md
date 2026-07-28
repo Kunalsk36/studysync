@@ -44,6 +44,8 @@ Example:
 
 ### Task Management
 
+- Implemented Advanced Task Query API (Search, Filter, Sort, Pagination) for `GET /api/tasks`.
+- Enhanced `validate` middleware to optionally validate `req.query`.
 - Implemented Task Management Backend CRUD (Repository, Service, Controller, Routes).
 - Added Joi validation, category validation, and completion toggling.
 - Implemented Category Management Backend API (Repository, Service, Controller, Routes).

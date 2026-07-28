@@ -41,12 +41,77 @@ async function create(taskData) {
   return findById(result.insertId, userId);
 }
 
-async function findAllByUserId(userId) {
-  const [rows] = await pool.query(
-    "SELECT * FROM tasks WHERE user_id = ? ORDER BY created_at DESC",
-    [userId]
-  );
-  return rows;
+async function findAllByUserId(userId, options = {}) {
+  const {
+    search,
+    status,
+    priority,
+    categoryId,
+    completed,
+    dueDate,
+    sortBy = "created_at",
+    order = "desc",
+    page = 1,
+    limit = 10,
+  } = options;
+
+  let query = "SELECT SQL_CALC_FOUND_ROWS * FROM tasks WHERE user_id = ?";
+  const values = [userId];
+
+  if (search) {
+    query += " AND (title LIKE ? OR description LIKE ?)";
+    const likeTerm = `%${search}%`;
+    values.push(likeTerm, likeTerm);
+  }
+
+  if (status) {
+    query += " AND status = ?";
+    values.push(status);
+  }
+
+  if (priority) {
+    query += " AND priority = ?";
+    values.push(priority);
+  }
+
+  if (categoryId) {
+    query += " AND category_id = ?";
+    values.push(categoryId);
+  }
+
+  if (completed !== undefined) {
+    // Handle both boolean true/false and string "true"/"false"
+    const isCompleted = String(completed) === "true";
+    if (isCompleted) {
+      query += " AND status = 'completed'";
+    } else {
+      query += " AND status IN ('pending', 'in_progress')";
+    }
+  }
+
+  if (dueDate) {
+    query += " AND DATE(due_date) = DATE(?)";
+    values.push(dueDate);
+  }
+
+  // Validate sortBy to prevent SQL injection
+  const validSortColumns = ["created_at", "updated_at", "due_date", "priority", "title"];
+  const sortCol = validSortColumns.includes(sortBy) ? sortBy : "created_at";
+  const sortOrder = order.toLowerCase() === "asc" ? "ASC" : "DESC";
+
+  query += ` ORDER BY ${sortCol} ${sortOrder}`;
+
+  const offset = (page - 1) * limit;
+  query += " LIMIT ? OFFSET ?";
+  values.push(Number(limit), Number(offset));
+
+  const [rows] = await pool.query(query, values);
+  const [[{ total }]] = await pool.query("SELECT FOUND_ROWS() as total");
+
+  return {
+    data: rows,
+    total,
+  };
 }
 
 async function findById(id, userId) {
