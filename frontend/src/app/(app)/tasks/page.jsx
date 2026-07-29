@@ -93,6 +93,16 @@ export default function TasksPage() {
     }
   };
 
+  const handleClearFilters = () => {
+    setQuery("");
+    setStatusFilter("all");
+    setPriorityFilter("all");
+    setCategoryFilter("all");
+    setSortBy("default");
+    setOrder("asc");
+    setPage(1);
+  };
+
   const handleUpdateTask = (updatedTask) => {
     setTasks(prev => prev.map(t => t.id === updatedTask.id ? updatedTask : t));
   };
@@ -196,6 +206,13 @@ export default function TasksPage() {
               <option value="all">All</option>
               {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
             </select>
+          </div>
+          
+          <div className="w-full sm:w-auto">
+            <label className="text-xs font-medium text-transparent mb-1 block select-none">Clear</label>
+            <Button variant="secondary" onClick={handleClearFilters} className="h-9 px-3 text-xs w-full sm:w-auto">
+              Clear Filters
+            </Button>
           </div>
         </div>
         

@@ -57,7 +57,19 @@ export function TaskItem({ task, category, onUpdateTask, onEdit, onDelete, compa
   const handleToggleSubtask = async (stId) => {
     try {
       await subtaskService.toggleComplete(task.id, stId);
+      
+      const subtask = subtasks.find(st => st.id === stId);
+      let updatedTaskData = undefined;
+      if (subtask && !subtask.is_completed && task.status === "pending") {
+        // Automatically transition to in_progress
+        const res = await taskService.updateTask(task.id, { status: "in_progress" });
+        updatedTaskData = res.data;
+      }
+      
       setSubtasks(subtasks.map(st => st.id === stId ? { ...st, is_completed: !st.is_completed } : st));
+      if (updatedTaskData) {
+        onUpdateTask?.(updatedTaskData);
+      }
     } catch (err) {
       console.error(err);
     }

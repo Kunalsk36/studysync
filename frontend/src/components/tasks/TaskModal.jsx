@@ -56,7 +56,8 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
       setIsCreatingCategory(false);
       setNewCategoryName("");
     }
-  }, [open, initialData, categories]);
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [open, initialData]); // removed 'categories' so form doesn't wipe when categories refresh
 
   const loadSubtasks = async (taskId) => {
     try {
@@ -129,11 +130,22 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
       try {
         await subtaskService.toggleComplete(initialData.id, stId);
         setSubtasks(subtasks.map(st => st.id === stId ? { ...st, is_completed: !st.is_completed } : st));
+        
+        // Auto-transition to in_progress if pending and marking subtask as completed
+        const subtask = subtasks.find(st => st.id === stId);
+        if (subtask && !subtask.is_completed && status === "pending") {
+          setStatus("in_progress");
+        }
       } catch (err) {
         console.error("Failed to toggle subtask", err);
       }
     } else {
       setSubtasks(subtasks.map(st => st.id === stId ? { ...st, is_completed: !st.is_completed } : st));
+      
+      const subtask = subtasks.find(st => st.id === stId);
+      if (subtask && !subtask.is_completed && status === "pending") {
+        setStatus("in_progress");
+      }
     }
   };
 

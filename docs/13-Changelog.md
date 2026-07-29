@@ -46,6 +46,7 @@ Example:
 - QA completed.
 - Stabilization completed.
 - UX Enhancements completed (Inline Subtasks, Sort/Filter/Pagination UI, Date/Time).
+- Final UX Polish (Category Form Preservation, Clear Filters, Automatic Status Transition).
 - System is ready for Phase 6 (Calendar).
 
 ## Added
