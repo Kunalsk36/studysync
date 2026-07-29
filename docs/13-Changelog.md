@@ -44,6 +44,8 @@ Example:
 
 ### Task Management
 
+- Implemented Subtask Management Backend API (Repository, Service, Controller, Routes).
+- Added nested routing for `/api/tasks/:taskId/subtasks` protected by existing authentication and ownership checks.
 - Implemented Advanced Task Query API (Search, Filter, Sort, Pagination) for `GET /api/tasks`.
 - Enhanced `validate` middleware to optionally validate `req.query`.
 - Implemented Task Management Backend CRUD (Repository, Service, Controller, Routes).

@@ -157,6 +157,7 @@ Current Priority:
   - [x] Task 2: Category Management Backend
   - [x] Task 3: Task Management Backend (CRUD)
   - [x] Task 4: Advanced Task Query API
+  - [x] Task 5: Subtask Management Backend
 
 ---
 

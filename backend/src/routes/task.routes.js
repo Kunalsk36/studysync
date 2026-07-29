@@ -15,4 +15,8 @@ router.put("/:id", validate(updateSchema), taskController.update);
 router.delete("/:id", taskController.remove);
 router.patch("/:id/toggle-complete", taskController.toggleComplete);
 
+const subtaskRoutes = require("./subtask.routes");
+
+router.use("/:taskId/subtasks", subtaskRoutes);
+
 module.exports = router;
