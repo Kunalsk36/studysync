@@ -21,6 +21,7 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
   const [subtasks, setSubtasks] = useState([]);
   const [newSubtask, setNewSubtask] = useState("");
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [confirmCompleteOpen, setConfirmCompleteOpen] = useState(false);
   
   // Category inline creation state
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
@@ -105,6 +106,40 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
       alert(err.message || "Failed to save task.");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const handleStatusChange = (e) => {
+    const newStatus = e.target.value;
+    if (newStatus === "completed") {
+      const hasIncompleteSubtasks = subtasks.some(st => !st.is_completed);
+      if (hasIncompleteSubtasks) {
+        setConfirmCompleteOpen(true);
+        return;
+      }
+    }
+    setStatus(newStatus);
+  };
+
+  const handleCompleteOnly = () => {
+    setConfirmCompleteOpen(false);
+    setStatus("completed");
+  };
+
+  const handleCompleteAll = async () => {
+    setConfirmCompleteOpen(false);
+    setStatus("completed");
+    
+    if (isEditing) {
+      try {
+        const incomplete = subtasks.filter(st => !st.is_completed);
+        await Promise.all(incomplete.map(st => subtaskService.toggleComplete(initialData.id, st.id)));
+        setSubtasks(subtasks.map(st => ({ ...st, is_completed: true })));
+      } catch (err) {
+        console.error(err);
+      }
+    } else {
+      setSubtasks(subtasks.map(st => ({ ...st, is_completed: true })));
     }
   };
 
@@ -250,7 +285,7 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
               <label className="text-sm font-medium text-[var(--fg)]">Status</label>
               <select
                 value={status}
-                onChange={(e) => setStatus(e.target.value)}
+                onChange={handleStatusChange}
                 className="h-11 rounded-sm border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--fg)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
               >
                 <option value="pending">Pending</option>
@@ -320,6 +355,39 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
           {isEditing ? "Save Changes" : "Create Task"}
         </Button>
       </div>
+
+      {/* Confirmation Dialog */}
+      {confirmCompleteOpen && (
+        <div className="fixed inset-0 z-[60] flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-md bg-[var(--surface)] p-6 shadow-lg border border-[var(--border)]">
+            <h3 className="mb-2 text-lg font-semibold text-[var(--fg)]">Complete Task?</h3>
+            <p className="mb-6 text-sm text-[var(--fg-muted)]">
+              This task still contains incomplete subtasks.<br/><br/>
+              Would you like to mark the remaining subtasks as completed as well?
+            </p>
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
+              <button 
+                onClick={() => setConfirmCompleteOpen(false)}
+                className="rounded-sm border border-[var(--border)] bg-transparent px-4 py-2 text-sm font-medium text-[var(--fg)] hover:bg-[var(--border)]"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCompleteOnly}
+                className="rounded-sm border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--fg)] hover:bg-[var(--border)]"
+              >
+                Complete Task Only
+              </button>
+              <button 
+                onClick={handleCompleteAll}
+                className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+              >
+                Complete Task & All Subtasks
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </Modal>
   );
 }

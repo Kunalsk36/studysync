@@ -24,6 +24,7 @@ export function TaskItem({ task, category, onUpdateTask, onEdit, onDelete, compa
   const [showSubtasks, setShowSubtasks] = useState(false);
   const [newSubtask, setNewSubtask] = useState("");
   const [isLoadingSubtasks, setIsLoadingSubtasks] = useState(false);
+  const [confirmCompleteOpen, setConfirmCompleteOpen] = useState(false);
 
   const isDone = task.status === "completed";
 
@@ -46,11 +47,45 @@ export function TaskItem({ task, category, onUpdateTask, onEdit, onDelete, compa
 
   const handleStatusChange = async (e) => {
     const newStatus = e.target.value;
+    
+    if (newStatus === "completed") {
+      const hasIncompleteSubtasks = subtasks.some(st => !st.is_completed);
+      if (hasIncompleteSubtasks) {
+        setConfirmCompleteOpen(true);
+        return;
+      }
+    }
+
     try {
       const res = await taskService.updateTask(task.id, { status: newStatus });
       onUpdateTask?.(res.data);
     } catch (err) {
       console.error("Failed to update status", err);
+    }
+  };
+
+  const handleCompleteOnly = async () => {
+    setConfirmCompleteOpen(false);
+    try {
+      const res = await taskService.updateTask(task.id, { status: "completed" });
+      onUpdateTask?.(res.data);
+    } catch (err) {
+      console.error(err);
+    }
+  };
+
+  const handleCompleteAll = async () => {
+    setConfirmCompleteOpen(false);
+    try {
+      const incomplete = subtasks.filter(st => !st.is_completed);
+      await Promise.all(incomplete.map(st => subtaskService.toggleComplete(task.id, st.id)));
+      
+      const res = await taskService.updateTask(task.id, { status: "completed" });
+      
+      setSubtasks(subtasks.map(st => ({ ...st, is_completed: true })));
+      onUpdateTask?.(res.data);
+    } catch (err) {
+      console.error(err);
     }
   };
 
@@ -212,6 +247,39 @@ export function TaskItem({ task, category, onUpdateTask, onEdit, onDelete, compa
               className="h-7 w-full bg-transparent text-sm text-[var(--fg)] outline-none placeholder:text-[var(--fg-muted)]"
             />
           </form>
+        </div>
+      )}
+
+      {/* Confirmation Dialog */}
+      {confirmCompleteOpen && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-4">
+          <div className="w-full max-w-md rounded-md bg-[var(--surface)] p-6 shadow-lg border border-[var(--border)]">
+            <h3 className="mb-2 text-lg font-semibold text-[var(--fg)]">Complete Task?</h3>
+            <p className="mb-6 text-sm text-[var(--fg-muted)]">
+              This task still contains incomplete subtasks.<br/><br/>
+              Would you like to mark the remaining subtasks as completed as well?
+            </p>
+            <div className="flex flex-col sm:flex-row justify-end gap-3">
+              <button 
+                onClick={() => setConfirmCompleteOpen(false)}
+                className="rounded-sm border border-[var(--border)] bg-transparent px-4 py-2 text-sm font-medium text-[var(--fg)] hover:bg-[var(--border)]"
+              >
+                Cancel
+              </button>
+              <button 
+                onClick={handleCompleteOnly}
+                className="rounded-sm border border-[var(--border)] bg-[var(--surface)] px-4 py-2 text-sm font-medium text-[var(--fg)] hover:bg-[var(--border)]"
+              >
+                Complete Task Only
+              </button>
+              <button 
+                onClick={handleCompleteAll}
+                className="rounded-sm bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+              >
+                Complete Task & All Subtasks
+              </button>
+            </div>
+          </div>
         </div>
       )}
     </motion.div>

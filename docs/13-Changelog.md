@@ -47,6 +47,7 @@ Example:
 - Stabilization completed.
 - UX Enhancements completed (Inline Subtasks, Sort/Filter/Pagination UI, Date/Time).
 - Final UX Polish (Category Form Preservation, Clear Filters, Automatic Status Transition).
+- Added Task Completion Confirmation dialog when completing tasks with unfinished subtasks.
 - System is ready for Phase 6 (Calendar).
 
 ## Added
