@@ -1,21 +1,25 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { CheckCircle2, Circle, Clock } from "lucide-react";
+import { CheckCircle2, Circle, Clock, Edit2, Trash2 } from "lucide-react";
 import { Badge } from "@/components/ui/Badge";
 import { cn } from "@/utils/cn";
 
 const PRIORITY_TONE = { high: "danger", medium: "warning", low: "info" };
 
-export function TaskItem({ task, onToggle, compact = false }) {
+export function TaskItem({ task, category, onToggle, onEdit, onDelete, compact = false }) {
   const isDone = task.status === "completed";
+
+  // Backend returns dates in string format. Format them gracefully if needed,
+  // or just show them directly if they are YYYY-MM-DD.
+  const dueDate = task.due_date ? new Date(task.due_date).toLocaleDateString() : "—";
 
   return (
     <motion.div
       layout
       initial={{ opacity: 0, y: 6 }}
       animate={{ opacity: 1, y: 0 }}
-      className="flex items-start gap-3 rounded-md border border-[var(--border)] bg-[var(--surface)] p-4"
+      className="group flex items-start gap-3 rounded-md border border-[var(--border)] bg-[var(--surface)] p-4 hover:border-primary/50 transition-colors"
     >
       <button onClick={() => onToggle?.(task.id)} className="mt-0.5 shrink-0">
         {isDone ? (
@@ -37,43 +41,46 @@ export function TaskItem({ task, onToggle, compact = false }) {
           </p>
           <Badge tone={PRIORITY_TONE[task.priority]}>{task.priority}</Badge>
         </div>
+        
+        {task.description && !compact && (
+          <p className="mt-1 text-sm text-[var(--fg-muted)] line-clamp-2">
+            {task.description}
+          </p>
+        )}
 
         {!compact && (
-          <div className="mt-2 flex flex-wrap items-center gap-2 text-xs text-[var(--fg-muted)]">
-            <span
-              className="inline-flex items-center gap-1 rounded-full px-2 py-0.5"
-              style={{ backgroundColor: `${task.color}1a`, color: task.color }}
-            >
-              {task.category}
-            </span>
+          <div className="mt-2 flex flex-wrap items-center gap-3 text-xs text-[var(--fg-muted)]">
+            {category && (
+              <span
+                className="inline-flex items-center gap-1 rounded-full px-2 py-0.5 font-medium"
+                style={{ backgroundColor: `${category.color}1a`, color: category.color }}
+              >
+                {category.name}
+              </span>
+            )}
             <span className="inline-flex items-center gap-1">
               <Clock className="h-3.5 w-3.5" />
-              Due {task.dueDate}
+              Due {dueDate}
             </span>
-            {task.tags?.map((tag) => (
-              <span key={tag} className="rounded-full bg-[var(--border)]/50 px-2 py-0.5">
-                #{tag}
-              </span>
-            ))}
           </div>
         )}
+      </div>
 
-        {!compact && task.subtasks?.length > 0 && (
-          <div className="mt-3 space-y-1.5 border-l-2 border-[var(--border)] pl-3">
-            {task.subtasks.map((st) => (
-              <div key={st.id} className="flex items-center gap-2 text-sm">
-                {st.done ? (
-                  <CheckCircle2 className="h-3.5 w-3.5 text-success" />
-                ) : (
-                  <Circle className="h-3.5 w-3.5 text-[var(--fg-muted)]" />
-                )}
-                <span className={cn("text-[var(--fg-muted)]", st.done && "line-through")}>
-                  {st.title}
-                </span>
-              </div>
-            ))}
-          </div>
-        )}
+      <div className="flex items-center gap-1 opacity-0 group-hover:opacity-100 transition-opacity">
+        <button 
+          onClick={() => onEdit?.(task)}
+          className="p-1.5 text-[var(--fg-muted)] hover:text-primary hover:bg-[var(--border)] rounded-md transition-colors"
+          title="Edit Task"
+        >
+          <Edit2 className="h-4 w-4" />
+        </button>
+        <button 
+          onClick={() => onDelete?.(task.id)}
+          className="p-1.5 text-[var(--fg-muted)] hover:text-danger hover:bg-danger/10 rounded-md transition-colors"
+          title="Delete Task"
+        >
+          <Trash2 className="h-4 w-4" />
+        </button>
       </div>
     </motion.div>
   );

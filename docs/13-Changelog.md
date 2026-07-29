@@ -44,6 +44,9 @@ Example:
 
 ### Task Management
 
+- Integrated Task Management Frontend with backend APIs replacing mock data.
+- Created `taskService`, `categoryService`, and `subtaskService` API clients.
+- Refactored `TasksPage`, `TaskItem`, and `TaskModal` to handle dynamic data, pagination, and subtasks natively.
 - Implemented Subtask Management Backend API (Repository, Service, Controller, Routes).
 - Added nested routing for `/api/tasks/:taskId/subtasks` protected by existing authentication and ownership checks.
 - Implemented Advanced Task Query API (Search, Filter, Sort, Pagination) for `GET /api/tasks`.

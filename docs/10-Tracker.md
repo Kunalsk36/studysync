@@ -158,6 +158,7 @@ Current Priority:
   - [x] Task 3: Task Management Backend (CRUD)
   - [x] Task 4: Advanced Task Query API
   - [x] Task 5: Subtask Management Backend
+  - [x] Task 6: Task Management Frontend Integration
 
 ---
 
