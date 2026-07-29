@@ -42,7 +42,6 @@ const querySchema = Joi.object({
   status: Joi.string().valid("pending", "in_progress", "completed").optional(),
   priority: Joi.string().valid("low", "medium", "high").optional(),
   categoryId: Joi.number().integer().positive().optional(),
-  completed: Joi.boolean().optional(),
   dueDate: Joi.date().iso().optional(),
   sortBy: Joi.string().valid("created_at", "updated_at", "due_date", "priority", "title").optional(),
   order: Joi.string().valid("asc", "desc").optional(),

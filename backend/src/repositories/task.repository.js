@@ -47,7 +47,6 @@ async function findAllByUserId(userId, options = {}) {
     status,
     priority,
     categoryId,
-    completed,
     dueDate,
     sortBy = "created_at",
     order = "desc",
@@ -55,44 +54,41 @@ async function findAllByUserId(userId, options = {}) {
     limit = 10,
   } = options;
 
-  let query = "SELECT SQL_CALC_FOUND_ROWS * FROM tasks WHERE user_id = ?";
+  let whereClause = "WHERE user_id = ?";
   const values = [userId];
 
   if (search) {
-    query += " AND (title LIKE ? OR description LIKE ?)";
+    whereClause += " AND (title LIKE ? OR description LIKE ?)";
     const likeTerm = `%${search}%`;
     values.push(likeTerm, likeTerm);
   }
 
   if (status) {
-    query += " AND status = ?";
+    whereClause += " AND status = ?";
     values.push(status);
   }
 
   if (priority) {
-    query += " AND priority = ?";
+    whereClause += " AND priority = ?";
     values.push(priority);
   }
 
   if (categoryId) {
-    query += " AND category_id = ?";
+    whereClause += " AND category_id = ?";
     values.push(categoryId);
   }
 
-  if (completed !== undefined) {
-    // Handle both boolean true/false and string "true"/"false"
-    const isCompleted = String(completed) === "true";
-    if (isCompleted) {
-      query += " AND status = 'completed'";
-    } else {
-      query += " AND status IN ('pending', 'in_progress')";
-    }
-  }
-
   if (dueDate) {
-    query += " AND DATE(due_date) = DATE(?)";
+    whereClause += " AND DATE(due_date) = DATE(?)";
     values.push(dueDate);
   }
+
+  // Count query
+  const countQuery = `SELECT COUNT(*) as total FROM tasks ${whereClause}`;
+  const [[{ total }]] = await pool.query(countQuery, values);
+
+  // Data query
+  let query = `SELECT * FROM tasks ${whereClause}`;
 
   // Validate sortBy to prevent SQL injection
   const validSortColumns = ["created_at", "updated_at", "due_date", "priority", "title"];
@@ -103,10 +99,9 @@ async function findAllByUserId(userId, options = {}) {
 
   const offset = (page - 1) * limit;
   query += " LIMIT ? OFFSET ?";
-  values.push(Number(limit), Number(offset));
+  const queryValues = [...values, Number(limit), Number(offset)];
 
-  const [rows] = await pool.query(query, values);
-  const [[{ total }]] = await pool.query("SELECT FOUND_ROWS() as total");
+  const [rows] = await pool.query(query, queryValues);
 
   return {
     data: rows,
