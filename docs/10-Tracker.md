@@ -152,13 +152,14 @@ Current Priority:
 
 ## Development
 
-- [/] Phase 5 – Task Management (in progress)
+- [x] Phase 5 – Task Management
   - [x] Task 1: Database Migrations (`task_categories`, `tasks`, `subtasks` tables)
   - [x] Task 2: Category Management Backend
   - [x] Task 3: Task Management Backend (CRUD)
   - [x] Task 4: Advanced Task Query API
   - [x] Task 5: Subtask Management Backend
   - [x] Task 6: Task Management Frontend Integration
+  - [x] Task 7: QA & Stabilization
 
 ---
 
