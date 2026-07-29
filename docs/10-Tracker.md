@@ -160,6 +160,7 @@ Current Priority:
   - [x] Task 5: Subtask Management Backend
   - [x] Task 6: Task Management Frontend Integration
   - [x] Task 7: QA & Stabilization
+  - [x] Task 8: UX Enhancements
 
 ---
 

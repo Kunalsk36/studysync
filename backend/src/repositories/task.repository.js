@@ -92,10 +92,17 @@ async function findAllByUserId(userId, options = {}) {
 
   // Validate sortBy to prevent SQL injection
   const validSortColumns = ["created_at", "updated_at", "due_date", "priority", "title"];
-  const sortCol = validSortColumns.includes(sortBy) ? sortBy : "created_at";
-  const sortOrder = order.toLowerCase() === "asc" ? "ASC" : "DESC";
-
-  query += ` ORDER BY ${sortCol} ${sortOrder}`;
+  
+  if (sortBy === "default" || !sortBy) {
+    // 1. Status (Pending -> In Progress -> Completed)
+    // 2. Priority (High -> Medium -> Low)
+    // 3. Due Date (Nearest first, i.e., ASC)
+    query += " ORDER BY FIELD(status, 'pending', 'in_progress', 'completed'), FIELD(priority, 'high', 'medium', 'low'), due_date ASC";
+  } else {
+    const sortCol = validSortColumns.includes(sortBy) ? sortBy : "created_at";
+    const sortOrder = order.toLowerCase() === "asc" ? "ASC" : "DESC";
+    query += ` ORDER BY ${sortCol} ${sortOrder}`;
+  }
 
   const offset = (page - 1) * limit;
   query += " LIMIT ? OFFSET ?";

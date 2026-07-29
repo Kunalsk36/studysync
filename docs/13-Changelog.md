@@ -45,6 +45,7 @@ Example:
 - Phase 5 completed.
 - QA completed.
 - Stabilization completed.
+- UX Enhancements completed (Inline Subtasks, Sort/Filter/Pagination UI, Date/Time).
 - System is ready for Phase 6 (Calendar).
 
 ## Added
