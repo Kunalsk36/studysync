@@ -38,6 +38,51 @@ Example:
 
 ---
 
+# [1.4.0] - 2026-07-31
+
+## Phase 5 Complete - Task Management
+
+### Added
+- Complete Task Management module
+- Category management
+- Task CRUD
+- Subtask CRUD
+- Search
+- Filtering
+- Sorting
+- Pagination
+- Frontend API integration
+- Responsive Task Management UI
+
+### Improved
+- Pending → In Progress → Completed workflow
+- Inline status management
+- Inline subtask management
+- Task completion confirmation dialog
+- Category creation UX (preserve modal state)
+- Modal scrolling
+- Display subtasks directly on task cards
+- Sorting by workflow and due date
+- Filter reset option
+- Automatic status updates based on subtask completion
+
+### Fixed
+- Multiple UX issues discovered during manual testing
+- State synchronization improvements
+- Form reset issues
+- Task list refresh consistency
+- Various frontend interaction bugs
+
+### QA
+- Backend tested
+- Frontend manually tested
+- Authentication verified
+- CRUD verified
+- Search/Filter/Sort/Pagination verified
+- Responsive testing completed
+
+Phase 5 – Task Management is officially complete.
+
 # [1.3.1] - 2026-07-28
 
 ## [Phase 5 Complete] - Task Management
