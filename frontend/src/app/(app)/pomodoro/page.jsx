@@ -7,7 +7,11 @@ import { PageHeader } from "@/components/shared/PageHeader";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
 import { Tabs } from "@/components/ui/Tabs";
-import { POMODORO_HISTORY } from "@/constants/mockData";
+import { useToast } from "@/context/ToastContext";
+import { useConfirm } from "@/context/ConfirmContext";
+import { pomodoroService } from "@/services/pomodoroService";
+import { EmptyState } from "@/components/ui/EmptyState";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
 const DURATIONS = { focus: 25 * 60, short_break: 5 * 60, long_break: 15 * 60 };
 const SESSION_LABELS = {
@@ -30,7 +34,28 @@ export default function PomodoroPage() {
   const [sessionType, setSessionType] = useState("focus");
   const [secondsLeft, setSecondsLeft] = useState(DURATIONS.focus);
   const [running, setRunning] = useState(false);
+  const [activeSessionId, setActiveSessionId] = useState(null);
+  const [history, setHistory] = useState([]);
+  const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const intervalRef = useRef(null);
+  const toast = useToast();
+  const { confirm } = useConfirm();
+
+  const fetchHistory = async () => {
+    try {
+      setIsLoadingHistory(true);
+      const res = await pomodoroService.getHistory();
+      setHistory(res.data || []);
+    } catch (err) {
+      toast.showError("Failed to load session history.");
+    } finally {
+      setIsLoadingHistory(false);
+    }
+  };
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
 
   useEffect(() => {
     if (running) {
@@ -39,6 +64,7 @@ export default function PomodoroPage() {
           if (prev <= 1) {
             clearInterval(intervalRef.current);
             setRunning(false);
+            handleEndSession("completed");
             return 0;
           }
           return prev - 1;
@@ -46,15 +72,83 @@ export default function PomodoroPage() {
       }, 1000);
     }
     return () => clearInterval(intervalRef.current);
-  }, [running]);
+  }, [running, activeSessionId]);
 
-  const changeSession = (value) => {
+  const handleStartSession = async () => {
+    // If resuming from pause, don't create a new session
+    if (activeSessionId) {
+      setRunning(true);
+      return;
+    }
+    
+    try {
+      const res = await pomodoroService.startSession({
+        sessionType,
+        plannedMinutes: Math.round(DURATIONS[sessionType] / 60),
+        startedAt: new Date().toISOString()
+      });
+      setActiveSessionId(res.data.id);
+      setRunning(true);
+    } catch (err) {
+      toast.showError("Failed to start session.");
+    }
+  };
+
+  const handleEndSession = async (status) => {
+    if (!activeSessionId) return;
+    
+    try {
+      const planned = DURATIONS[sessionType];
+      const actualSeconds = planned - secondsLeft;
+      const actualMinutes = Math.max(0, Math.round(actualSeconds / 60));
+      
+      await pomodoroService.endSession({
+        sessionId: activeSessionId,
+        actualMinutes,
+        status,
+        endedAt: new Date().toISOString()
+      });
+      
+      setActiveSessionId(null);
+      fetchHistory();
+      
+      if (status === "completed") {
+        toast.showSuccess("Session completed! Great job.");
+      }
+    } catch (err) {
+      toast.showError("Failed to save session.");
+    }
+  };
+
+  const changeSession = async (value) => {
+    if (activeSessionId) {
+      const ok = await confirm({
+        title: "Cancel Session?",
+        message: "You have an active session. Changing types will cancel it.",
+        confirmText: "Cancel Session",
+        isDestructive: true
+      });
+      if (!ok) return;
+      await handleEndSession("cancelled");
+    }
+    
     setSessionType(value);
     setSecondsLeft(DURATIONS[value]);
     setRunning(false);
   };
 
-  const reset = () => {
+  const reset = async () => {
+    if (activeSessionId) {
+      const ok = await confirm({
+        title: "Reset Timer?",
+        message: "This will cancel your current session.",
+        confirmText: "Reset",
+        isDestructive: true
+      });
+      if (!ok) return;
+      await handleEndSession("cancelled");
+    }
+    
     setSecondsLeft(DURATIONS[sessionType]);
     setRunning(false);
   };
@@ -111,7 +205,13 @@ export default function PomodoroPage() {
           </div>
 
           <div className="flex items-center gap-3">
-            <Button size="lg" onClick={() => setRunning((r) => !r)} className="w-36">
+            <Button size="lg" onClick={() => {
+              if (running) {
+                setRunning(false); // Pause
+              } else {
+                handleStartSession(); // Play
+              }
+            }} className="w-36">
               {running ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               {running ? "Pause" : "Start"}
             </Button>
@@ -128,23 +228,42 @@ export default function PomodoroPage() {
             <CardTitle>Session History</CardTitle>
           </CardHeader>
           <div className="space-y-3">
-            {POMODORO_HISTORY.map((session) => (
-              <div
-                key={session.id}
-                className="flex items-center justify-between rounded-md border border-[var(--border)] p-3"
-              >
-                <div>
-                  <p className="text-sm font-medium text-[var(--fg)]">
-                    {SESSION_LABELS[session.type].label}
-                  </p>
-                  <p className="text-xs text-[var(--fg-muted)]">{session.task || "—"}</p>
-                </div>
-                <div className="text-right">
-                  <p className="text-sm font-medium text-[var(--fg)]">{session.minutes}m</p>
-                  <p className="text-xs text-[var(--fg-muted)]">{session.date}</p>
-                </div>
-              </div>
-            ))}
+            {isLoadingHistory ? (
+              <LoadingSpinner text="Loading history..." />
+            ) : history.length === 0 ? (
+              <EmptyState 
+                icon={Coffee}
+                title="No history yet"
+                description="Complete your first session to see it here."
+              />
+            ) : (
+              history.slice(0, 10).map((session) => {
+                // Ensure session type maps to our styles
+                const style = SESSION_LABELS[session.session_type] || SESSION_LABELS.focus;
+                return (
+                  <div
+                    key={session.id}
+                    className="flex items-center justify-between rounded-md border border-[var(--border)] p-3"
+                  >
+                    <div>
+                      <p className="text-sm font-medium text-[var(--fg)] flex items-center gap-2">
+                        <style.icon className={`h-3 w-3 ${style.tone}`} />
+                        {style.label}
+                      </p>
+                      <p className="text-xs text-[var(--fg-muted)] mt-1">
+                        {session.task_title || (session.status === 'completed' ? 'Completed' : session.status === 'interrupted' ? 'Interrupted' : 'Cancelled')}
+                      </p>
+                    </div>
+                    <div className="text-right">
+                      <p className="text-sm font-medium text-[var(--fg)]">{session.actual_minutes}m</p>
+                      <p className="text-xs text-[var(--fg-muted)] mt-1">
+                        {new Date(session.started_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
+                      </p>
+                    </div>
+                  </div>
+                );
+              })
+            )}
           </div>
         </Card>
       </div>

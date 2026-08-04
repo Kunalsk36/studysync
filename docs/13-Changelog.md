@@ -38,6 +38,16 @@ Example:
 
 ---
 
+# [1.6.0] - 2026-08-04
+
+## Phase 7 – Pomodoro Timer Completed
+
+### Added
+- Database migration for `pomodoro_sessions` table
+- Pomodoro Timer backend REST API (start, end, history)
+- Frontend integration with actual timer session tracking
+- UI updates for Pomodoro Timer (session state, history list)
+
 # [1.5.0] - 2026-08-04
 
 ## Phase 6 – Calendar Completed
