@@ -1,7 +1,7 @@
 "use client";
 
 import { useMemo, useState, useEffect, useCallback } from "react";
-import { ChevronLeft, ChevronRight, Plus, Trash2, Edit } from "lucide-react";
+import { ChevronLeft, ChevronRight, Plus, Trash2, Edit, AlertCircle } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Card } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -13,6 +13,7 @@ import { calendarService } from "@/services/calendarService";
 import { EventModal } from "@/components/calendar/EventModal";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { useConfirm } from "@/context/ConfirmContext";
+import { useToast } from "@/context/ToastContext";
 
 const WEEKDAYS = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
 
@@ -47,10 +48,12 @@ export default function CalendarPage() {
   const [selectedDate, setSelectedDate] = useState(toKey(new Date().getFullYear(), new Date().getMonth(), new Date().getDate()));
   const [events, setEvents] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState("");
   
   const [modalOpen, setModalOpen] = useState(false);
   const [editingEvent, setEditingEvent] = useState(null);
   const { confirm } = useConfirm();
+  const toast = useToast();
 
   const year = cursor.getFullYear();
   const month = cursor.getMonth();
@@ -59,6 +62,7 @@ export default function CalendarPage() {
   const fetchEvents = useCallback(async () => {
     try {
       setIsLoading(true);
+      setError("");
       // For a month view, fetch the events in this month
       const startDate = new Date(year, month, 1).toISOString();
       const endDate = new Date(year, month + 1, 0, 23, 59, 59).toISOString();
@@ -66,7 +70,7 @@ export default function CalendarPage() {
       const res = await calendarService.getEvents({ startDate, endDate });
       setEvents(res.data || []);
     } catch (err) {
-      console.error("Failed to load events", err);
+      setError(err.message || "Failed to load events.");
     } finally {
       setIsLoading(false);
     }
@@ -102,8 +106,10 @@ export default function CalendarPage() {
     try {
       if (existingId) {
         await calendarService.updateEvent(existingId, eventData);
+        toast.showSuccess("Event updated.");
       } else {
         await calendarService.createEvent(eventData);
+        toast.showSuccess("Event created.");
       }
       fetchEvents();
     } catch (err) {
@@ -122,8 +128,9 @@ export default function CalendarPage() {
     try {
       await calendarService.deleteEvent(id);
       fetchEvents();
+      toast.showSuccess("Event deleted.");
     } catch (err) {
-      console.error("Failed to delete event", err);
+      toast.showError(err.message || "Failed to delete event.");
     }
   };
 
@@ -156,6 +163,13 @@ export default function CalendarPage() {
           </Button>
         }
       />
+
+      {error && (
+        <div className="mb-5 rounded-md bg-danger/10 p-3 text-sm text-danger flex items-center gap-2">
+          <AlertCircle className="h-4 w-4" />
+          {error}
+        </div>
+      )}
 
       <div className="grid gap-6 lg:grid-cols-3">
         <Card className="lg:col-span-2">
@@ -277,7 +291,12 @@ export default function CalendarPage() {
               })}
             </div>
           ) : (
-            <EmptyState icon={CalendarIcon} title="No events scheduled." description="Enjoy your free time or add a new study session." />
+            <EmptyState 
+              icon={CalendarIcon} 
+              title="No events scheduled." 
+              description="Enjoy your free time or add a new study session." 
+              action={<Button onClick={openCreateModal}>Add Event</Button>}
+            />
           )}
         </Card>
       </div>

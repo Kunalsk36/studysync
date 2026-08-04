@@ -38,6 +38,17 @@ Example:
 
 ---
 
+# [1.5.0] - 2026-08-04
+
+## Phase 6 – Calendar Completed
+
+### Added
+- Calendar Event database migration and full schema
+- Complete backend Calendar REST API (CRUD, Date Filtering)
+- Calendar frontend page with interactive grid and chronologically sorted day views
+- EventModal for creating and editing calendar items with field-level validation
+- Unified error state handling and toast notifications for the Calendar module
+
 # [1.4.1] - 2026-08-04
 
 ## UX Foundation Improvements

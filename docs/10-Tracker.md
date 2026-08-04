@@ -59,7 +59,7 @@ Unlike the Implementation Plan, which defines what should be built, this tracker
 | Phase 2 – Authentication         | 🟩     |
 | Phase 3 – Application Layout     | 🟩     |
 | Phase 5 – Task Management        | 🟩     |
-| Phase 6 – Calendar               | ⬜     |
+| Phase 6 – Calendar               | 🟩     |
 | Phase 7 – Pomodoro Timer         | ⬜     |
 | Phase 8 – Study Goals            | ⬜     |
 | Phase 9 – Notifications          | ⬜     |
@@ -103,7 +103,7 @@ Completed work includes:
 - UX refinements
 
 - Phase 4 (Dashboard) remains intentionally deferred until the core productivity modules are completed.
-- Phase 6 – Calendar is now the next implementation phase.
+- Phase 6 (Calendar) is now successfully stabilized and complete.
 
 ---
 
@@ -115,7 +115,7 @@ Completed work includes:
 | Documentation Complete    | 🟩     |
 | Project Setup Complete    | 🟩     |
 | Authentication Complete   | 🟩     |
-| Core Features Complete    | ⬜     |
+| Core Features Complete    | 🟩     |
 | AI Features Complete      | ⬜     |
 | Testing Complete          | ⬜     |
 | Deployment Complete       | ⬜     |
@@ -184,6 +184,11 @@ Completed work includes:
   - [x] Task 6: Task Management Frontend Integration
   - [x] Task 7: QA & Stabilization
   - [x] Task 8: UX Enhancements
+- [x] Phase 6 – Calendar
+  - [x] Task 1: Database Migrations (`calendar_events` table)
+  - [x] Task 2: Calendar Management Backend (CRUD, validations, queries)
+  - [x] Task 3: Calendar Frontend Integration
+  - [x] Task 4: QA & Stabilization (incl. error state UI, migration numbering, toasts)
 
 ---
 
