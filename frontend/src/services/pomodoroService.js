@@ -13,4 +13,12 @@ export const pomodoroService = {
     const query = new URLSearchParams(params).toString();
     return request(`/pomodoro/history${query ? `?${query}` : ''}`);
   },
+
+  deleteSession: async (id) => {
+    return request(`/pomodoro/history/${id}`, { method: 'DELETE' });
+  },
+
+  clearHistory: async () => {
+    return request('/pomodoro/history', { method: 'DELETE' });
+  },
 };

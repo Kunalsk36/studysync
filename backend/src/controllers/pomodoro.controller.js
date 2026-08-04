@@ -27,8 +27,28 @@ async function getHistory(req, res, next) {
   }
 }
 
+async function deleteSession(req, res, next) {
+  try {
+    await pomodoroService.deleteSession(req.user.id, req.params.id);
+    res.status(200).json({ success: true, message: 'Session deleted' });
+  } catch (error) {
+    next(error);
+  }
+}
+
+async function clearHistory(req, res, next) {
+  try {
+    await pomodoroService.clearHistory(req.user.id);
+    res.status(200).json({ success: true, message: 'History cleared' });
+  } catch (error) {
+    next(error);
+  }
+}
+
 module.exports = {
   startSession,
   endSession,
-  getHistory
+  getHistory,
+  deleteSession,
+  clearHistory
 };

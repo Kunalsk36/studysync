@@ -72,9 +72,23 @@ async function getHistory(userId, filters = {}) {
   return rows;
 }
 
+async function deleteSession(id, userId) {
+  const query = `DELETE FROM pomodoro_sessions WHERE id = ? AND user_id = ?`;
+  const [result] = await pool.query(query, [id, userId]);
+  return result.affectedRows > 0;
+}
+
+async function clearHistory(userId) {
+  const query = `DELETE FROM pomodoro_sessions WHERE user_id = ?`;
+  const [result] = await pool.query(query, [userId]);
+  return result.affectedRows > 0;
+}
+
 module.exports = {
   create,
   findById,
   update,
-  getHistory
+  getHistory,
+  deleteSession,
+  clearHistory
 };

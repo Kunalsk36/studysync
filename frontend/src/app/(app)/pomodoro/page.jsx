@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, Coffee, Brain } from "lucide-react";
+import { Play, Pause, RotateCcw, Coffee, Brain, Trash2 } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -10,6 +10,7 @@ import { Tabs } from "@/components/ui/Tabs";
 import { useToast } from "@/context/ToastContext";
 import { useConfirm } from "@/context/ConfirmContext";
 import { pomodoroService } from "@/services/pomodoroService";
+import { taskService } from "@/services/taskService";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
@@ -36,6 +37,8 @@ export default function PomodoroPage() {
   const [running, setRunning] = useState(false);
   const [activeSessionId, setActiveSessionId] = useState(null);
   const [history, setHistory] = useState([]);
+  const [tasks, setTasks] = useState([]);
+  const [selectedTaskId, setSelectedTaskId] = useState("");
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const intervalRef = useRef(null);
   const toast = useToast();
@@ -53,9 +56,59 @@ export default function PomodoroPage() {
     }
   };
 
+  const fetchTasks = async () => {
+    try {
+      const res = await taskService.getTasks();
+      const activeTasks = (res.data || []).filter(t => t.status !== "completed");
+      setTasks(activeTasks);
+    } catch (err) {
+      // Non-critical, ignore
+    }
+  };
+
   useEffect(() => {
     fetchHistory();
+    fetchTasks();
+    
+    // Restore from localStorage
+    const savedSession = localStorage.getItem("pomodoro_session");
+    if (savedSession) {
+      try {
+        const parsed = JSON.parse(savedSession);
+        if (parsed.activeSessionId) {
+          setActiveSessionId(parsed.activeSessionId);
+          setSessionType(parsed.sessionType);
+          
+          if (parsed.running) {
+            const elapsed = Math.floor((Date.now() - parsed.timestamp) / 1000);
+            const remaining = Math.max(0, parsed.secondsLeft - elapsed);
+            setSecondsLeft(remaining);
+            setRunning(remaining > 0);
+          } else {
+            setSecondsLeft(parsed.secondsLeft);
+            setRunning(false);
+          }
+        }
+      } catch (e) {
+        localStorage.removeItem("pomodoro_session");
+      }
+    }
   }, []);
+
+  // Save session state to localStorage
+  useEffect(() => {
+    if (activeSessionId) {
+      localStorage.setItem("pomodoro_session", JSON.stringify({
+        activeSessionId,
+        sessionType,
+        secondsLeft,
+        running,
+        timestamp: Date.now()
+      }));
+    } else {
+      localStorage.removeItem("pomodoro_session");
+    }
+  }, [activeSessionId, sessionType, secondsLeft, running]);
 
   useEffect(() => {
     if (running) {
@@ -83,6 +136,7 @@ export default function PomodoroPage() {
     
     try {
       const res = await pomodoroService.startSession({
+        taskId: selectedTaskId ? parseInt(selectedTaskId, 10) : undefined,
         sessionType,
         plannedMinutes: Math.round(DURATIONS[sessionType] / 60),
         startedAt: new Date().toISOString()
@@ -153,6 +207,42 @@ export default function PomodoroPage() {
     setRunning(false);
   };
 
+  const handleDeleteHistory = async (id) => {
+    const ok = await confirm({
+      title: "Delete Session?",
+      message: "Are you sure you want to delete this session from history?",
+      confirmText: "Delete",
+      isDestructive: true
+    });
+    if (!ok) return;
+
+    try {
+      await pomodoroService.deleteSession(id);
+      toast.showSuccess("Session deleted.");
+      fetchHistory();
+    } catch (err) {
+      toast.showError("Failed to delete session.");
+    }
+  };
+
+  const handleClearHistory = async () => {
+    const ok = await confirm({
+      title: "Clear All History?",
+      message: "Are you sure you want to permanently delete all your Pomodoro history?",
+      confirmText: "Clear History",
+      isDestructive: true
+    });
+    if (!ok) return;
+
+    try {
+      await pomodoroService.clearHistory();
+      toast.showSuccess("History cleared.");
+      fetchHistory();
+    } catch (err) {
+      toast.showError("Failed to clear history.");
+    }
+  };
+
   const total = DURATIONS[sessionType];
   const progress = 1 - secondsLeft / total;
   const circumference = 2 * Math.PI * 88;
@@ -213,19 +303,37 @@ export default function PomodoroPage() {
               }
             }} className="w-36">
               {running ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
-              {running ? "Pause" : "Start"}
+              {running ? "Pause" : (activeSessionId ? "Resume" : "Start")}
             </Button>
             <Button size="lg" variant="secondary" onClick={reset}>
               <RotateCcw className="h-4 w-4" />
             </Button>
           </div>
 
-          <p className="mt-6 text-sm text-[var(--fg-muted)]">Linked task: Complete React Course</p>
+          <div className="mt-8 w-full max-w-xs flex flex-col items-center">
+            <label className="text-xs text-[var(--fg-muted)] mb-1 uppercase tracking-wider font-semibold">Linked Task</label>
+            <select
+              value={selectedTaskId}
+              onChange={(e) => setSelectedTaskId(e.target.value)}
+              className="w-full rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--fg)] focus:outline-none focus:ring-1 focus:ring-primary"
+              disabled={!!activeSessionId}
+            >
+              <option value="">No task selected</option>
+              {tasks.map(t => (
+                <option key={t.id} value={t.id}>{t.title}</option>
+              ))}
+            </select>
+          </div>
         </Card>
 
         <Card>
-          <CardHeader>
+          <CardHeader className="flex flex-row items-center justify-between pb-2">
             <CardTitle>Session History</CardTitle>
+            {history.length > 0 && (
+              <Button variant="ghost" size="sm" onClick={handleClearHistory} className="h-8 text-xs text-[var(--fg-muted)] hover:text-danger">
+                Clear All
+              </Button>
+            )}
           </CardHeader>
           <div className="space-y-3">
             {isLoadingHistory ? (
@@ -243,23 +351,30 @@ export default function PomodoroPage() {
                 return (
                   <div
                     key={session.id}
-                    className="flex items-center justify-between rounded-md border border-[var(--border)] p-3"
+                    className="flex items-center justify-between rounded-md border border-[var(--border)] p-3 group relative"
                   >
                     <div>
                       <p className="text-sm font-medium text-[var(--fg)] flex items-center gap-2">
                         <style.icon className={`h-3 w-3 ${style.tone}`} />
                         {style.label}
                       </p>
-                      <p className="text-xs text-[var(--fg-muted)] mt-1">
+                      <p className="text-xs text-[var(--fg-muted)] mt-1 truncate max-w-[120px]" title={session.task_title || session.status}>
                         {session.task_title || (session.status === 'completed' ? 'Completed' : session.status === 'interrupted' ? 'Interrupted' : 'Cancelled')}
                       </p>
                     </div>
-                    <div className="text-right">
+                    <div className="text-right flex flex-col items-end">
                       <p className="text-sm font-medium text-[var(--fg)]">{session.actual_minutes}m</p>
                       <p className="text-xs text-[var(--fg-muted)] mt-1">
                         {new Date(session.started_at).toLocaleDateString(undefined, { month: 'short', day: 'numeric', hour: 'numeric', minute: '2-digit' })}
                       </p>
                     </div>
+                    
+                    <button 
+                      onClick={() => handleDeleteHistory(session.id)}
+                      className="absolute -top-2 -right-2 bg-danger text-white rounded-full p-1.5 opacity-0 group-hover:opacity-100 transition-opacity hover:bg-danger/80"
+                    >
+                      <Trash2 className="h-3 w-3" />
+                    </button>
                   </div>
                 );
               })

@@ -10,5 +10,7 @@ router.use(authenticate);
 router.post('/start', validate(startSessionSchema), pomodoroController.startSession);
 router.post('/end', validate(endSessionSchema), pomodoroController.endSession);
 router.get('/history', validate(queryHistorySchema, 'query'), pomodoroController.getHistory);
+router.delete('/history/:id', pomodoroController.deleteSession);
+router.delete('/history', pomodoroController.clearHistory);
 
 module.exports = router;

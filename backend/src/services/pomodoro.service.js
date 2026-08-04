@@ -31,8 +31,22 @@ async function getHistory(userId, queryParams) {
   return await pomodoroRepository.getHistory(userId, queryParams);
 }
 
+async function deleteSession(userId, sessionId) {
+  const success = await pomodoroRepository.deleteSession(sessionId, userId);
+  if (!success) {
+    throw new PomodoroError('Session not found', 404);
+  }
+  return true;
+}
+
+async function clearHistory(userId) {
+  return await pomodoroRepository.clearHistory(userId);
+}
+
 module.exports = {
   startSession,
   endSession,
-  getHistory
+  getHistory,
+  deleteSession,
+  clearHistory
 };
