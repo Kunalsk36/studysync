@@ -7,23 +7,34 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import { mapValidationErrors } from "@/utils/validation";
 
 export default function ForgotPasswordPage() {
   const [email, setEmail] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const [submitted, setSubmitted] = useState(false);
   const { forgotPassword } = useAuth();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     try {
       await forgotPassword(email);
       setSubmitted(true);
+      toast.showSuccess("Reset link sent!");
     } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+      if (err.errors && err.errors.length > 0) {
+        setFieldErrors(mapValidationErrors(err.errors));
+        setError("Please correct the highlighted fields.");
+      } else {
+        setError(err.message || "Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -59,7 +70,8 @@ export default function ForgotPasswordPage() {
             type="email"
             placeholder="you@example.com"
             value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            onChange={(e) => { setEmail(e.target.value); setFieldErrors(prev => ({ ...prev, email: null })) }}
+            error={fieldErrors.email}
             required
           />
           <Button type="submit" size="lg" className="w-full" loading={loading}>

@@ -3,6 +3,7 @@ const healthRoutes = require("./health.routes");
 const authRoutes = require("./auth.routes");
 const categoryRoutes = require("./category.routes");
 const taskRoutes = require("./task.routes");
+const calendarRoutes = require("./calendar.routes");
 
 const router = Router();
 
@@ -17,5 +18,6 @@ router.use("/api/auth", authRoutes);
 // later phases.
 router.use("/api/categories", categoryRoutes);
 router.use("/api/tasks", taskRoutes);
+router.use("/api/calendar", calendarRoutes);
 
 module.exports = router;

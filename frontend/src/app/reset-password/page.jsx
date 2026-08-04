@@ -7,15 +7,18 @@ import { AuthLayout } from "@/components/auth/AuthLayout";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import { mapValidationErrors } from "@/utils/validation";
 
 function ResetPasswordForm() {
   const token = useSearchParams().get("token");
   const [newPassword, setNewPassword] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const { resetPassword } = useAuth();
   const router = useRouter();
+  const toast = useToast();
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -27,12 +30,18 @@ function ResetPasswordForm() {
     }
 
     setLoading(true);
+    setFieldErrors({});
     try {
       await resetPassword({ token, newPassword });
-      setSuccess(true);
+      toast.showSuccess("Password reset successful.");
       setTimeout(() => router.push("/login"), 1500);
     } catch (err) {
-      setError(err.errors?.length ? err.errors.join(" ") : err.message || "Reset failed.");
+      if (err.errors && err.errors.length > 0) {
+        setFieldErrors(mapValidationErrors(err.errors));
+        setError("Please correct the highlighted fields.");
+      } else {
+        setError(err.message || "Reset failed.");
+      }
     } finally {
       setLoading(false);
     }
@@ -48,39 +57,34 @@ function ResetPasswordForm() {
         </Link>
       }
     >
-      {success ? (
-        <div className="rounded-sm border border-success/30 bg-success/10 px-3.5 py-3 text-sm text-success">
-          Password reset successful. Redirecting to login...
-        </div>
-      ) : (
-        <form onSubmit={handleSubmit} className="space-y-4">
-          {error && (
-            <div className="rounded-sm border border-danger/30 bg-danger/10 px-3.5 py-2.5 text-sm text-danger">
-              {error}
-            </div>
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {error && (
+          <div className="rounded-sm border border-danger/30 bg-danger/10 px-3.5 py-2.5 text-sm text-danger">
+            {error}
+          </div>
           )}
           {!token && (
             <div className="rounded-sm border border-warning/30 bg-warning/10 px-3.5 py-2.5 text-sm text-warning">
               This link is missing a reset token. Please use the link from your email.
             </div>
           )}
-          <Input
-            label="New password"
-            type="password"
-            placeholder="Min. 8 characters"
-            value={newPassword}
-            onChange={(e) => setNewPassword(e.target.value)}
-            required
-          />
+        <Input
+          label="New password"
+          type="password"
+          placeholder="Min. 8 characters"
+          value={newPassword}
+          onChange={(e) => { setNewPassword(e.target.value); setFieldErrors(prev => ({ ...prev, newPassword: null })) }}
+          error={fieldErrors.newPassword}
+          required
+        />
           <p className="text-xs text-[var(--fg-muted)]">
             Must include an uppercase letter, a lowercase letter, a number, and a special
             character.
           </p>
           <Button type="submit" size="lg" className="w-full" loading={loading} disabled={!token}>
-            Reset Password
-          </Button>
-        </form>
-      )}
+          Reset Password
+        </Button>
+      </form>
     </AuthLayout>
   );
 }

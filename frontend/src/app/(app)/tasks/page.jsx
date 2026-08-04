@@ -7,14 +7,17 @@ import { TaskItem } from "@/components/tasks/TaskItem";
 import { TaskModal } from "@/components/tasks/TaskModal";
 import { Button } from "@/components/ui/Button";
 import { EmptyState } from "@/components/ui/EmptyState";
+import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 import { taskService } from "@/services/taskService";
 import { categoryService } from "@/services/categoryService";
+import { useConfirm } from "@/context/ConfirmContext";
 
 export default function TasksPage() {
   const [tasks, setTasks] = useState([]);
   const [categories, setCategories] = useState([]);
   const [categoryMap, setCategoryMap] = useState({});
   const [totalTasks, setTotalTasks] = useState(0);
+  const { confirm } = useConfirm();
   
   // Filters & Sorting
   const [query, setQuery] = useState("");
@@ -108,7 +111,14 @@ export default function TasksPage() {
   };
 
   const deleteTask = async (id) => {
-    if (!confirm("Are you sure you want to delete this task?")) return;
+    const isConfirmed = await confirm({
+      title: "Delete Task",
+      message: "Are you sure you want to delete this task? This cannot be undone.",
+      confirmText: "Delete",
+      isDestructive: true
+    });
+    if (!isConfirmed) return;
+    
     try {
       await taskService.deleteTask(id);
       setTasks(prev => prev.filter(t => t.id !== id));
@@ -258,7 +268,7 @@ export default function TasksPage() {
       )}
 
       {isLoading && tasks.length === 0 ? (
-        <div className="text-center py-10 text-[var(--fg-muted)]">Loading tasks...</div>
+        <LoadingSpinner text="Loading tasks..." />
       ) : tasks.length > 0 ? (
         <div className="space-y-3">
           {tasks.map((task) => (

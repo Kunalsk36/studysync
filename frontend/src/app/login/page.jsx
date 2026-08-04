@@ -8,25 +8,39 @@ import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import { mapValidationErrors } from "@/utils/validation";
 
 export default function LoginPage() {
   const [form, setForm] = useState({ email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
+  const [fieldErrors, setFieldErrors] = useState({});
   const { login } = useAuth();
   const router = useRouter();
+  const toast = useToast();
 
-  const handleChange = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+  const handleChange = (field) => (e) => {
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+    setFieldErrors((prev) => ({ ...prev, [field]: null }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     try {
       await login(form);
+      toast.showSuccess("Welcome back!");
       router.push("/dashboard");
     } catch (err) {
-      setError(err.message || "Something went wrong. Please try again.");
+      if (err.errors && err.errors.length > 0) {
+        setFieldErrors(mapValidationErrors(err.errors));
+        setError("Please correct the highlighted fields.");
+      } else {
+        setError(err.message || "Something went wrong. Please try again.");
+      }
     } finally {
       setLoading(false);
     }
@@ -67,6 +81,7 @@ export default function LoginPage() {
             placeholder="you@example.com"
             value={form.email}
             onChange={handleChange("email")}
+            error={fieldErrors.email}
             required
           />
           <div>
@@ -76,6 +91,7 @@ export default function LoginPage() {
               placeholder="••••••••"
               value={form.password}
               onChange={handleChange("password")}
+              error={fieldErrors.password}
               required
             />
             <div className="mt-2 text-right">

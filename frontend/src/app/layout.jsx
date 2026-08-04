@@ -2,6 +2,8 @@ import { Inter } from "next/font/google";
 import Script from "next/script";
 import { ThemeProvider } from "@/context/ThemeContext";
 import { AuthProvider } from "@/context/AuthContext";
+import { ToastProvider } from "@/context/ToastContext";
+import { ConfirmProvider } from "@/context/ConfirmContext";
 import "./globals.css";
 
 const inter = Inter({
@@ -40,7 +42,11 @@ export default function RootLayout({ children }) {
       </head>
       <body className="min-h-screen font-sans antialiased">
         <ThemeProvider>
-          <AuthProvider>{children}</AuthProvider>
+          <ToastProvider>
+            <ConfirmProvider>
+              <AuthProvider>{children}</AuthProvider>
+            </ConfirmProvider>
+          </ToastProvider>
         </ThemeProvider>
       </body>
     </html>

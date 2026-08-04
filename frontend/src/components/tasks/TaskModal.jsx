@@ -8,6 +8,8 @@ import { Button } from "@/components/ui/Button";
 import { CheckCircle2, Circle, Trash2 } from "lucide-react";
 import { subtaskService } from "@/services/subtaskService";
 import { categoryService } from "@/services/categoryService";
+import { useToast } from "@/context/ToastContext";
+import { mapValidationErrors } from "@/utils/validation";
 
 export function TaskModal({ open, onClose, onSave, initialData, categories, refreshCategories }) {
   const isEditing = !!initialData;
@@ -26,6 +28,9 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
   // Category inline creation state
   const [isCreatingCategory, setIsCreatingCategory] = useState(false);
   const [newCategoryName, setNewCategoryName] = useState("");
+  
+  const [errors, setErrors] = useState({});
+  const toast = useToast();
 
   useEffect(() => {
     if (open) {
@@ -56,6 +61,7 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
       }
       setIsCreatingCategory(false);
       setNewCategoryName("");
+      setErrors({});
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [open, initialData]); // removed 'categories' so form doesn't wipe when categories refresh
@@ -102,8 +108,12 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
       
       onClose();
     } catch (err) {
-      console.error(err);
-      alert(err.message || "Failed to save task.");
+      if (err.errors && err.errors.length > 0) {
+        setErrors(mapValidationErrors(err.errors));
+        toast.showError("Please correct the highlighted fields.");
+      } else {
+        toast.showError(err.message || "Failed to save task.");
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -205,8 +215,15 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
       setCategoryId(res.data.id);
       setIsCreatingCategory(false);
       setNewCategoryName("");
+      toast.showSuccess("Category created.");
     } catch (err) {
-      alert("Failed to create category");
+      if (err.errors && err.errors.length > 0) {
+        setErrors(mapValidationErrors(err.errors));
+      } else {
+        toast.showError(err.message || "Failed to create category");
+      }
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
@@ -216,17 +233,19 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
         <form id="task-form" onSubmit={handleSubmit} className="space-y-4">
           <Input
             label="Task Title"
-            placeholder="e.g. Revise Operating Systems"
+            placeholder="e.g. Complete chapter 4"
             value={title}
-            onChange={(e) => setTitle(e.target.value)}
-            maxLength={100}
+            onChange={(e) => { setTitle(e.target.value); setErrors(prev => ({ ...prev, title: null })) }}
+            error={errors.title}
             required
+            maxLength={150}
           />
           <Textarea 
             label="Description" 
-            placeholder="Optional notes about this task" 
+            placeholder="Optional notes..." 
             value={description}
-            onChange={(e) => setDescription(e.target.value)}
+            onChange={(e) => { setDescription(e.target.value); setErrors(prev => ({ ...prev, description: null })) }}
+            error={errors.description}
           />
 
           <div className="grid grid-cols-2 gap-4">
@@ -241,16 +260,19 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
               </div>
               
               {isCreatingCategory ? (
-                <div className="flex items-center gap-2">
-                  <input 
-                    type="text" 
-                    value={newCategoryName}
-                    onChange={e => setNewCategoryName(e.target.value)}
-                    placeholder="Name..."
-                    className="h-11 w-full rounded-sm border border-[var(--border)] bg-[var(--surface)] px-3 text-sm text-[var(--fg)] outline-none focus:border-primary focus:ring-2 focus:ring-primary/20"
-                  />
-                  <button type="button" onClick={handleCreateCategory} className="text-sm font-medium text-primary hover:underline whitespace-nowrap">Save</button>
-                  <button type="button" onClick={() => setIsCreatingCategory(false)} className="text-sm font-medium text-[var(--fg-muted)] hover:underline whitespace-nowrap">Cancel</button>
+                <div className="flex gap-2 items-end">
+                  <div className="flex-1">
+                    <Input
+                      label="New Category Name"
+                      placeholder="e.g. Projects"
+                      value={newCategoryName}
+                      onChange={(e) => { setNewCategoryName(e.target.value); setErrors(prev => ({ ...prev, name: null })) }}
+                      error={errors.name}
+                      autoFocus
+                    />
+                  </div>
+                  <button type="button" onClick={handleCreateCategory} className="text-sm font-medium text-primary hover:underline whitespace-nowrap mb-2.5">Save</button>
+                  <button type="button" onClick={() => setIsCreatingCategory(false)} className="text-sm font-medium text-[var(--fg-muted)] hover:underline whitespace-nowrap mb-2.5">Cancel</button>
                 </div>
               ) : (
                 <select 
@@ -297,7 +319,8 @@ export function TaskModal({ open, onClose, onSave, initialData, categories, refr
               label="Due Date & Time" 
               type="datetime-local" 
               value={dueDate}
-              onChange={(e) => setDueDate(e.target.value)}
+              onChange={(e) => { setDueDate(e.target.value); setErrors(prev => ({ ...prev, dueDate: null })) }}
+              error={errors.dueDate}
             />
           </div>
         </form>

@@ -38,6 +38,21 @@ Example:
 
 ---
 
+# [1.4.1] - 2026-08-04
+
+## UX Foundation Improvements
+
+### Added
+- Global Toast Notification System for standardized messaging (`ToastContext.jsx`, `Toast.jsx`)
+- Global Confirm Dialog System for centralized action confirmations (`ConfirmContext.jsx`)
+- Standardized API Error Normalization via `api.js` interceptor mapping
+- Reusable `LoadingSpinner` UI component
+
+### Improved
+- Form Validation UX: Forms preserve user input on failure and map Joi keys to friendly strings visually highlighted near relevant fields
+- Standardized error codes (401, 403, 404, 409, 422, 429, 500) directly into user-friendly messages
+- Replaced all explicit `alert()` and text-based `"Loading..."` usages across Authentication, Task Management, and Calendar modules
+
 # [1.4.0] - 2026-07-31
 
 ## Phase 5 Complete - Task Management

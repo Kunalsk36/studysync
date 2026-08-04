@@ -8,27 +8,39 @@ import { GoogleSignInButton } from "@/components/auth/GoogleSignInButton";
 import { Input } from "@/components/ui/Input";
 import { Button } from "@/components/ui/Button";
 import { useAuth } from "@/context/AuthContext";
+import { useToast } from "@/context/ToastContext";
+import { mapValidationErrors } from "@/utils/validation";
 
 export default function RegisterPage() {
   const [form, setForm] = useState({ fullName: "", email: "", password: "" });
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(false);
+  const [fieldErrors, setFieldErrors] = useState({});
   const { register } = useAuth();
   const router = useRouter();
+  const toast = useToast();
 
-  const handleChange = (field) => (e) => setForm((f) => ({ ...f, [field]: e.target.value }));
+  const handleChange = (field) => (e) => {
+    setForm((f) => ({ ...f, [field]: e.target.value }));
+    setFieldErrors((prev) => ({ ...prev, [field]: null }));
+  };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
+    setFieldErrors({});
     setLoading(true);
     try {
       await register(form);
-      setSuccess(true);
+      toast.showSuccess("Registration successful. Welcome!");
       setTimeout(() => router.push("/login"), 1500);
     } catch (err) {
-      setError(err.errors?.length ? err.errors.join(" ") : err.message || "Registration failed.");
+      if (err.errors && err.errors.length > 0) {
+        setFieldErrors(mapValidationErrors(err.errors));
+        setError("Please correct the highlighted fields.");
+      } else {
+        setError(err.message || "Registration failed.");
+      }
     } finally {
       setLoading(false);
     }
@@ -61,11 +73,6 @@ export default function RegisterPage() {
             {error}
           </div>
         )}
-        {success && (
-          <div className="rounded-sm border border-success/30 bg-success/10 px-3.5 py-2.5 text-sm text-success">
-            Registration successful. Redirecting to login...
-          </div>
-        )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
           <Input
@@ -74,6 +81,7 @@ export default function RegisterPage() {
             placeholder="Kunal Kavathekar"
             value={form.fullName}
             onChange={handleChange("fullName")}
+            error={fieldErrors.fullName}
             maxLength={100}
             required
           />
@@ -83,6 +91,7 @@ export default function RegisterPage() {
             placeholder="you@example.com"
             value={form.email}
             onChange={handleChange("email")}
+            error={fieldErrors.email}
             required
           />
           <Input
@@ -91,6 +100,7 @@ export default function RegisterPage() {
             placeholder="Min. 8 characters"
             value={form.password}
             onChange={handleChange("password")}
+            error={fieldErrors.password}
             required
           />
           <p className="text-xs text-[var(--fg-muted)]">
