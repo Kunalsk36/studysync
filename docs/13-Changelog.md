@@ -44,9 +44,12 @@ Example:
 
 ### Added
 - Database migration for `pomodoro_sessions` table
-- Pomodoro Timer backend REST API (start, end, history)
+- Pomodoro Timer backend REST API (start, end, history, delete, clear)
 - Frontend integration with actual timer session tracking
 - UI updates for Pomodoro Timer (session state, history list)
+- Timer state persistence across page refresh (LocalStorage)
+- Dynamic task linking for timer sessions
+- Session history deletion with confirmation dialogs
 
 # [1.5.0] - 2026-08-04
 
