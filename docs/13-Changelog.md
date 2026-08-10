@@ -45,6 +45,9 @@ Example:
 ### Added
 - Database schema for Phase 8: created `study_goals` and `manual_study_entries` tables via migrations.
 - Added optional `goal_id` relationship to `pomodoro_sessions` for automatic goal progress tracking.
+- Study Goals Backend APIs (CRUD, dynamic progress calculation).
+- Manual Study Entries Backend APIs (CRUD).
+- Backend validation and standard error handling for Phase 8 endpoints.
 
 ### Changed
 - Decided on the Study Goal Progress model: Progress will be calculated dynamically from linked Pomodoro sessions and a new `manual_study_entries` table instead of a static `completed_hours` field to prevent inconsistency and double-counting.
