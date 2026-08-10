@@ -190,6 +190,12 @@ Users
  ├──────── Calendar Events
  │
  ├──────── Pomodoro Sessions
+ │            │
+ │            └────── Study Goals (Optional)
+ │
+ ├──────── Manual Study Entries
+ │            │
+ │            └────── Study Goals
  │
  ├──────── Notifications
  │
@@ -217,12 +223,13 @@ The MVP includes the following primary tables.
 | subtasks          | Child tasks                       |
 | calendar_events   | Calendar module                   |
 | pomodoro_sessions | Study sessions                    |
+| manual_study_entries| Manually recorded study time    |
 | notifications     | User reminders                    |
 | achievements      | Gamification (achievement defs)   |
 | user_achievements | Gamification (earned achievements)|
 | ai_history        | AI generated suggestions          |
 
-This table matches the final 13-table schema detailed in Parts 2–4 and summarized in §31.
+This table matches the final 14-table schema detailed in Parts 2–4 and summarized in §31.
 
 ---
 
@@ -1049,6 +1056,7 @@ It is used to calculate:
 | id              | BIGINT UNSIGNED                             | No       | AUTO_INCREMENT    | Primary Key        |
 | user_id         | BIGINT UNSIGNED                             | No       | FK                | Session owner      |
 | task_id         | BIGINT UNSIGNED                             | Yes      | NULL              | Related task       |
+| goal_id         | BIGINT UNSIGNED                             | Yes      | NULL              | Related study goal |
 | session_type    | ENUM('focus','short_break','long_break')    | No       | 'focus'           | Session type       |
 | planned_minutes | INT                                         | No       | 25                | Planned duration   |
 | actual_minutes  | INT                                         | No       | 0                 | Actual duration    |
@@ -1064,6 +1072,7 @@ It is used to calculate:
 - PRIMARY KEY (`id`)
 - INDEX (`user_id`)
 - INDEX (`task_id`)
+- INDEX (`goal_id`)
 - INDEX (`started_at`)
 
 ---
@@ -1077,9 +1086,8 @@ users (1)
 
 pomodoro_sessions (Many)
 
-↓
-
-tasks (Optional)
+├─→ tasks (Optional)
+└─→ study_goals (Optional)
 ```
 
 ---
@@ -1088,8 +1096,9 @@ tasks (Optional)
 
 - Every session belongs to one user.
 - Linking a session to a task is optional.
-- Completed sessions contribute to productivity statistics.
-- Interrupted sessions are stored but excluded from streak calculations.
+- Linking a session to a study goal is optional.
+- Completed sessions with a linked goal contribute automatically to that goal's progress.
+- Interrupted sessions are stored but excluded from streak calculations and goal progress.
 
 ---
 
@@ -1100,10 +1109,92 @@ tasks (Optional)
   "id": 7,
   "user_id": 1,
   "task_id": 12,
+  "goal_id": 3,
   "session_type": "focus",
   "planned_minutes": 25,
   "actual_minutes": 25,
   "status": "completed"
+}
+```
+
+---
+
+# 15.1 manual_study_entries
+
+## Purpose
+
+Stores manually recorded study time that was performed outside of the Pomodoro timer.
+This enables accurate tracking of goal progress for activities like reading textbooks, offline practice, or long study sessions.
+
+---
+
+## Primary Key
+
+`id`
+
+---
+
+## Foreign Keys
+
+- `user_id → users.id`
+- `goal_id → study_goals.id`
+
+---
+
+## Columns
+
+| Column         | Data Type       | Nullable | Default           | Description               |
+| -------------- | --------------- | -------- | ----------------- | ------------------------- |
+| id             | BIGINT UNSIGNED | No       | AUTO_INCREMENT    | Primary Key               |
+| user_id        | BIGINT UNSIGNED | No       | FK                | Owner                     |
+| goal_id        | BIGINT UNSIGNED | No       | FK                | Associated goal           |
+| minutes        | INT             | No       | -                 | Study time in minutes     |
+| entry_date     | DATE            | No       | -                 | Date of study             |
+| notes          | TEXT            | Yes      | NULL              | Optional description      |
+| created_at     | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Creation time             |
+| updated_at     | TIMESTAMP       | No       | CURRENT_TIMESTAMP | Last update               |
+
+---
+
+## Indexes
+
+- PRIMARY KEY (`id`)
+- INDEX (`user_id`)
+- INDEX (`goal_id`)
+- INDEX (`entry_date`)
+
+---
+
+## Relationships
+
+```
+study_goals (1)
+
+↓
+
+manual_study_entries (Many)
+```
+
+---
+
+## Business Rules
+
+- Every entry must be associated with a valid study goal owned by the user.
+- Minutes must be strictly positive.
+- These entries are aggregated dynamically along with completed pomodoro sessions to calculate a goal's total completed hours.
+
+---
+
+## Example Record
+
+```json
+{
+  "id": 10,
+  "user_id": 1,
+  "goal_id": 3,
+  "minutes": 90,
+  "entry_date": "2026-08-10",
+  "notes": "Read chapter 4 and 5"
 }
 ```
 

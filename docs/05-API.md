@@ -171,10 +171,20 @@ MVP authentication uses a single JWT access token with no refresh token — expi
 
 | Method | Endpoint   | Description |
 | ------ | ---------- | ----------- |
-| GET    | /goals     | Get goals   |
+| GET    | /goals     | Get goals (includes calculated progress: `pomodoro_hours`, `manual_hours`, `total_completed_hours`, `progress_percentage`) |
+| GET    | /goals/:id | Get a specific goal with progress |
 | POST   | /goals     | Create goal |
 | PUT    | /goals/:id | Update goal |
 | DELETE | /goals/:id | Delete goal |
+
+### Study Goal Manual Entries APIs
+
+| Method | Endpoint                                   | Description |
+| ------ | ------------------------------------------ | ----------- |
+| GET    | /goals/:id/manual-entries                  | Get all manual study-time entries for a goal |
+| POST   | /goals/:id/manual-entries                  | Add a manual study-time entry to a goal |
+| PUT    | /goals/:goalId/manual-entries/:entryId     | Edit a manual study-time entry |
+| DELETE | /goals/:goalId/manual-entries/:entryId     | Delete a manual study-time entry |
 
 ---
 
@@ -182,7 +192,7 @@ MVP authentication uses a single JWT access token with no refresh token — expi
 
 | Method | Endpoint          | Description     |
 | ------ | ----------------- | --------------- |
-| POST   | /pomodoro/start   | Start session   |
+| POST   | /pomodoro/start   | Start session (accepts optional `goal_id` in request body) |
 | POST   | /pomodoro/end     | End session     |
 | GET    | /pomodoro/history | Session history |
 

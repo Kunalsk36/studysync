@@ -730,43 +730,36 @@ Enable users to define, monitor, and achieve their learning goals through struct
 
 ## Implementation Tasks
 
-### Database
+### Task 1 – Study Goals & Manual Study-Time Database Schema
+- Create `study_goals` and `manual_study_entries` tables.
+- Add `goal_id` foreign key to `pomodoro_sessions` via a new migration.
+- Configure user relationships and ON DELETE behavior.
 
-- Create `study_goals` table
-- Configure user relationships
+### Task 2 – Study Goals Backend APIs & Automatic Progress Calculation
+- Goal CRUD APIs (`GET`, `POST`, `PUT`, `DELETE`).
+- Goal progress calculation (aggregating Pomodoro and manual entry hours).
+- Goal validation rules (e.g., target hours > 0).
 
-### Backend
+### Task 3 – Pomodoro ↔ Study Goal Integration
+- Update Pomodoro backend to accept `goal_id` on session start.
+- Update frontend Pomodoro UI to allow optional Study Goal selection.
+- Ensure completed Pomodoro sessions are accurately linked to goals.
 
-- Goal CRUD APIs
-- Goal progress calculation
-- Goal completion logic
-- Validation
+### Task 4 – Study Goals Frontend Integration
+- Build frontend `goalService.js`.
+- Update `/study-goals` page to use real API data.
+- Create Modal forms for adding, editing, and deleting goals.
+- Replace mock data with live computed progress bars.
 
-### Frontend
+### Task 5 – Manual Study-Time UI & Progress Visualization
+- Build manual study-time backend APIs (`GET`, `POST`, `PUT`, `DELETE`).
+- Add "Log Manual Study Time" functionality to the frontend Goals page.
+- Build UI for viewing, editing, and deleting a goal's manual entries.
 
-- Goals page
-- Create Goal modal
-- Goal cards
-- Progress indicators
-- Goal statistics
-- Edit/Delete goal
-- Completed goals section
-- Empty state
-
-### Integration
-
-- Display active goals on Dashboard
-- Update progress automatically
-- Connect with analytics
-
-### Testing
-
-- Goal creation
-- Goal editing
-- Goal deletion
-- Progress calculation
-- Goal completion
-- Responsive layout
+### Task 6 – QA & Stabilization
+- Perform end-to-end testing for double-counting prevention.
+- Test edge cases for interrupted pomodoros and deleted goals.
+- Responsive layout verification.
 
 ---
 

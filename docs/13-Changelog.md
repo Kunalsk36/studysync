@@ -38,6 +38,18 @@ Example:
 
 ---
 
+# [Unreleased]
+
+## Phase 8 – Study Goals Planning
+
+### Added
+- Database schema for Phase 8: created `study_goals` and `manual_study_entries` tables via migrations.
+- Added optional `goal_id` relationship to `pomodoro_sessions` for automatic goal progress tracking.
+
+### Changed
+- Decided on the Study Goal Progress model: Progress will be calculated dynamically from linked Pomodoro sessions and a new `manual_study_entries` table instead of a static `completed_hours` field to prevent inconsistency and double-counting.
+- Updated Database Schema and API documentation to reflect the new design.
+
 # [1.6.0] - 2026-08-04
 
 ## Phase 7 – Pomodoro Timer Completed
