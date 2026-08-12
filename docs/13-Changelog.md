@@ -51,6 +51,7 @@ Example:
 - Scheduler verifies global `user_preferences.notifications_enabled` prior to notification insertion and leverages database-level idempotency to prevent duplicate reminders.
 - Implemented Event-Driven Triggers (Phase 9 - Task 4) within the Pomodoro service to generate system notifications upon session completion. Includes failure isolation to ensure Pomodoro completion succeeds regardless of notification delivery.
 - Integrated Frontend Notification UI (Phase 9 - Task 5), removing mock data and connecting the Notifications Center and Navbar bell to the real backend APIs, including read/unread toggles and deletion with toast notifications.
+- Completed QA Phase 9 (Phase 9 - Task 6): stabilized frontend UI, backend APIs, scheduler, event-driven Pomodoro triggers, and documented all functional test results.
 
 ## Phase 8 – Study Goals Planning
 

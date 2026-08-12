@@ -774,7 +774,7 @@ Enable users to define, monitor, and achieve their learning goals through struct
 
 # Phase 9 – Notifications
 
-**Status:** 🟡 In Progress
+**Status:** 🟩 Complete
 
 ## Objective
 
@@ -803,10 +803,10 @@ Implement a notification system that reminds users about important tasks, study 
 - Build frontend Notification Center page. (Completed)
 - Connect to Notification Backend APIs. (Completed)
 - Add Navbar unread notification bell. (Completed)
-- Implement read/unread status and API integration.
+- Implement read/unread status and API integration. (Completed)
 
-### Task 6 – QA & Stabilization
-- Test notification delivery, idempotency, and responsive layouts.
+### Task 6 – QA & Stabilization (Completed)
+- Test notification delivery, idempotency, and responsive layouts. (Completed)
 
 ### Testing
 

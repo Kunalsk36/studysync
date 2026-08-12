@@ -25,12 +25,12 @@ Our philosophy is built around a unified ecosystem. Instead of juggling multiple
 - **Theming**: Dark / Light Theme switching.
 - **Security**: JWT Authentication (httpOnly cookies), bcrypt hashing, Joi validation.
 - **API**: Layered REST APIs with centralized error handling.
+- **Notifications**: Automated event-driven updates and scheduled reminders.
 
 ### 🚧 Planned Features
 - Calendar
 - Pomodoro Timer
 - Study Goals
-- Notifications
 - Gamification
 - Dashboard
 - AI Assistant
@@ -110,9 +110,10 @@ StudySync follows a strict layered architecture pattern for robust separation of
 - Phase 6 – Calendar
 - Phase 7 – Pomodoro Timer
 - Phase 8 – Study Goals
+- Phase 9 – Notifications
 
 **Upcoming**
-- Phase 9 – Notifications
+- Phase 10 – Gamification
 
 *(Note: Phase 4 – Dashboard is intentionally deferred until the core productivity modules generate sufficient data).*
 
@@ -248,7 +249,7 @@ Detailed documentation is available in the `docs/` folder:
 - [x] Phase 6 – Calendar
 - [x] Phase 7 – Pomodoro Timer
 - [x] Phase 8 – Study Goals
-- [ ] Phase 9 – Notifications
+- [x] Phase 9 – Notifications
 - [ ] Phase 10 – Gamification
 - [ ] Phase 4 – Dashboard
 - [ ] Phase 11 – AI Assistant
