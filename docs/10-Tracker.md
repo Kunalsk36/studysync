@@ -184,7 +184,8 @@ Next Development Phase:
   - [x] Task 2: Study Goals Backend
   - [x] Task 3: Pomodoro ↔ Study Goal Integration
   - [x] Task 4: Study Goals Frontend Integration
-  - [ ] Task 5: Manual Study-Time UI & Progress Visualization
+  - [x] Task 5: Manual Study-Time UI & Progress Visualization
+  - [ ] Task 6: QA & Stabilization
 
 ---
 
