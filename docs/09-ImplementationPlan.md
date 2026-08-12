@@ -799,9 +799,10 @@ Implement a notification system that reminds users about important tasks, study 
 ### Task 4 – Event-Driven Triggers
 - Connect Pomodoro completion notifications. (Completed)
 
-### Task 5 – Frontend Notification UI
-- Build frontend Notification Center page.
-- Add Notification dropdown and badge to Navbar.
+### Task 5 – Frontend Notification UI (Completed)
+- Build frontend Notification Center page. (Completed)
+- Connect to Notification Backend APIs. (Completed)
+- Add Navbar unread notification bell. (Completed)
 - Implement read/unread status and API integration.
 
 ### Task 6 – QA & Stabilization
