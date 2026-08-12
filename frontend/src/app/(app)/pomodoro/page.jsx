@@ -14,6 +14,7 @@ import { taskService } from "@/services/taskService";
 import { goalService } from "@/services/goalService";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
+import { Select } from "@/components/ui/Select";
 
 const DURATIONS = { focus: 25 * 60, short_break: 5 * 60, long_break: 15 * 60 };
 const SESSION_LABELS = {
@@ -359,34 +360,32 @@ export default function PomodoroPage() {
           </div>
 
           <div className="mt-8 flex w-full max-w-lg flex-col gap-4 sm:flex-row sm:items-end sm:justify-center">
-            <div className="flex-1">
-              <label className="text-xs text-[var(--fg-muted)] mb-1 uppercase tracking-wider font-semibold">Study Goal</label>
-              <select
+            <div className="flex-1 min-w-0">
+              <label className="text-xs text-[var(--fg-muted)] mb-1 block uppercase tracking-wider font-semibold">Study Goal</label>
+              <Select
                 value={selectedGoalId}
-                onChange={(e) => setSelectedGoalId(e.target.value)}
-                className="w-full rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--fg)] focus:outline-none focus:ring-1 focus:ring-primary"
+                onChange={setSelectedGoalId}
+                options={[
+                  { value: "", label: "No goal selected" },
+                  ...goals.map(g => ({ value: g.id, label: g.title }))
+                ]}
+                placeholder="No goal selected"
                 disabled={!!activeSessionId}
-              >
-                <option value="">No goal selected</option>
-                {goals.map(g => (
-                  <option key={g.id} value={g.id}>{g.title}</option>
-                ))}
-              </select>
+              />
             </div>
 
-            <div className="flex-1">
-              <label className="text-xs text-[var(--fg-muted)] mb-1 uppercase tracking-wider font-semibold">Linked Task</label>
-              <select
+            <div className="flex-1 min-w-0">
+              <label className="text-xs text-[var(--fg-muted)] mb-1 block uppercase tracking-wider font-semibold">Linked Task</label>
+              <Select
                 value={selectedTaskId}
-                onChange={(e) => setSelectedTaskId(e.target.value)}
-                className="w-full rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--fg)] focus:outline-none focus:ring-1 focus:ring-primary"
+                onChange={setSelectedTaskId}
+                options={[
+                  { value: "", label: "No task selected" },
+                  ...tasks.map(t => ({ value: t.id, label: t.title }))
+                ]}
+                placeholder="No task selected"
                 disabled={!!activeSessionId}
-              >
-                <option value="">No task selected</option>
-                {tasks.map(t => (
-                  <option key={t.id} value={t.id}>{t.title}</option>
-                ))}
-              </select>
+              />
             </div>
           </div>
           
