@@ -29,6 +29,7 @@ export function TaskItem({ task, category, onUpdateTask, onEdit, onDelete, compa
   const isDone = task.status === "completed";
 
   useEffect(() => {
+    if (compact) return;
     let mounted = true;
     const fetchSubtasks = async () => {
       setIsLoadingSubtasks(true);
@@ -36,14 +37,14 @@ export function TaskItem({ task, category, onUpdateTask, onEdit, onDelete, compa
         const res = await subtaskService.getSubtasks(task.id);
         if (mounted) setSubtasks(res.data || []);
       } catch (err) {
-        console.error(err);
+        console.error("Failed to load subtasks for task", task.id, err);
       } finally {
         if (mounted) setIsLoadingSubtasks(false);
       }
     };
     fetchSubtasks();
     return () => { mounted = false; };
-  }, [task.id]);
+  }, [task.id, compact]);
 
   const handleStatusChange = async (e) => {
     const newStatus = e.target.value;

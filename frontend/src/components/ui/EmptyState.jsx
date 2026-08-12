@@ -10,7 +10,20 @@ export function EmptyState({ icon: Icon, title, description, action }) {
         <p className="font-medium text-[var(--fg)]">{title}</p>
         {description && <p className="mt-1 text-sm text-[var(--fg-muted)]">{description}</p>}
       </div>
-      {action}
+      {action && (
+        <div className="mt-2">
+          {action.label && action.onClick ? (
+            <button
+              onClick={action.onClick}
+              className="inline-flex items-center justify-center rounded-md bg-primary px-4 py-2 text-sm font-medium text-white hover:bg-primary/90"
+            >
+              {action.label}
+            </button>
+          ) : (
+            action
+          )}
+        </div>
+      )}
     </div>
   );
 }
