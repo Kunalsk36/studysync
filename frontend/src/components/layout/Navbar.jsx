@@ -1,14 +1,15 @@
 "use client";
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Link from "next/link";
 import { AnimatePresence, motion } from "framer-motion";
 import { Menu, Search, Bell, ChevronDown, LogOut } from "lucide-react";
 import { ThemeToggle } from "@/components/ui/ThemeToggle";
 import { Avatar } from "@/components/ui/Avatar";
-import { CURRENT_USER, NOTIFICATIONS } from "@/constants/mockData";
+import { CURRENT_USER } from "@/constants/mockData";
 import { USER_MENU_ITEMS } from "@/constants/navigation";
 import { useAuth } from "@/context/AuthContext";
+import { notificationService } from "@/services/notificationService";
 
 function initialsOf(name) {
   if (!name) return "SS";
@@ -22,13 +23,30 @@ function initialsOf(name) {
 
 export function Navbar({ onMenuClick }) {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
-  const unreadCount = NOTIFICATIONS.filter((n) => !n.read).length;
+  const [unreadCount, setUnreadCount] = useState(0);
   const { user, logout } = useAuth();
+  
   // Falls back to mock data only for fields the auth response doesn't carry
   // (e.g. avatar/email display) so the rest of the still-mock-data
   // dashboard isn't affected by this phase.
   const displayName = user?.fullName || CURRENT_USER.name;
   const displayEmail = user?.email || CURRENT_USER.email;
+
+  useEffect(() => {
+    let mounted = true;
+    if (user) {
+      notificationService.getNotifications()
+        .then((data) => {
+          if (mounted && data) {
+            setUnreadCount(data.filter(n => !n.is_read).length);
+          }
+        })
+        .catch(console.error);
+    }
+    return () => {
+      mounted = false;
+    };
+  }, [user]);
 
   return (
     <header className="sticky top-0 z-30 flex h-16 items-center gap-3 border-b border-[var(--border)] bg-[var(--surface)]/90 px-4 backdrop-blur sm:px-6">
