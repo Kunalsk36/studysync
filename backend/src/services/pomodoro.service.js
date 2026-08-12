@@ -1,4 +1,5 @@
 const pomodoroRepository = require('../repositories/pomodoro.repository');
+const goalRepository = require('../repositories/goal.repository');
 
 class PomodoroError extends Error {
   constructor(message, statusCode) {
@@ -8,6 +9,12 @@ class PomodoroError extends Error {
 }
 
 async function startSession(userId, sessionData) {
+  if (sessionData.goalId) {
+    const goal = await goalRepository.findById(sessionData.goalId, userId);
+    if (!goal) {
+      throw new PomodoroError('Study Goal not found or unauthorized', 404);
+    }
+  }
   return await pomodoroRepository.create({ ...sessionData, userId });
 }
 

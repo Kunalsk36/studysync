@@ -179,6 +179,11 @@ Next Development Phase:
   - [x] Task 2: Pomodoro Management Backend (start, end, history)
   - [x] Task 3: Pomodoro Frontend Integration
   - [x] Task 4: QA & Stabilization
+- [ ] Phase 8 – Study Goals
+  - [x] Task 1: Database Schema
+  - [x] Task 2: Study Goals Backend
+  - [x] Task 3: Pomodoro ↔ Study Goal Integration
+  - [ ] Task 4: Study Goals Frontend Integration
 
 ---
 

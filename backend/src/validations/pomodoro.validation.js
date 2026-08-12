@@ -2,6 +2,7 @@ const Joi = require('joi');
 
 const startSessionSchema = Joi.object({
   taskId: Joi.number().integer().positive().optional(),
+  goalId: Joi.number().integer().positive().optional(),
   sessionType: Joi.string().valid('focus', 'short_break', 'long_break').required(),
   plannedMinutes: Joi.number().integer().min(1).required(),
   startedAt: Joi.date().iso().required()

@@ -1,17 +1,18 @@
 const { pool } = require("../database/connection");
 
 async function create(sessionData) {
-  const { userId, taskId, sessionType, plannedMinutes, startedAt } = sessionData;
+  const { userId, taskId, goalId, sessionType, plannedMinutes, startedAt } = sessionData;
   
   const query = `
     INSERT INTO pomodoro_sessions 
-      (user_id, task_id, session_type, planned_minutes, started_at, actual_minutes, status)
-    VALUES (?, ?, ?, ?, ?, 0, 'completed')
+      (user_id, task_id, goal_id, session_type, planned_minutes, started_at, actual_minutes, status)
+    VALUES (?, ?, ?, ?, ?, ?, 0, 'completed')
   `;
   
   const params = [
     userId, 
     taskId || null, 
+    goalId || null,
     sessionType, 
     plannedMinutes, 
     new Date(startedAt)

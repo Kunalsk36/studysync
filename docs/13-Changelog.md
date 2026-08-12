@@ -48,6 +48,7 @@ Example:
 - Study Goals Backend APIs (CRUD, dynamic progress calculation).
 - Manual Study Entries Backend APIs (CRUD).
 - Backend validation and standard error handling for Phase 8 endpoints.
+- Integrated Pomodoro module with Study Goals: users can select a goal when starting a session, the selection is persisted, and progress is automatically contributed to the Study Goals backend upon session completion.
 
 ### Changed
 - Decided on the Study Goal Progress model: Progress will be calculated dynamically from linked Pomodoro sessions and a new `manual_study_entries` table instead of a static `completed_hours` field to prevent inconsistency and double-counting.

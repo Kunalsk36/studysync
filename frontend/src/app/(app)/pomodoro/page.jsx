@@ -11,6 +11,7 @@ import { useToast } from "@/context/ToastContext";
 import { useConfirm } from "@/context/ConfirmContext";
 import { pomodoroService } from "@/services/pomodoroService";
 import { taskService } from "@/services/taskService";
+import { goalService } from "@/services/goalService";
 import { EmptyState } from "@/components/ui/EmptyState";
 import { LoadingSpinner } from "@/components/ui/LoadingSpinner";
 
@@ -39,6 +40,8 @@ export default function PomodoroPage() {
   const [history, setHistory] = useState([]);
   const [tasks, setTasks] = useState([]);
   const [selectedTaskId, setSelectedTaskId] = useState("");
+  const [goals, setGoals] = useState([]);
+  const [selectedGoalId, setSelectedGoalId] = useState("");
   const [isLoadingHistory, setIsLoadingHistory] = useState(true);
   const intervalRef = useRef(null);
   const toast = useToast();
@@ -66,9 +69,20 @@ export default function PomodoroPage() {
     }
   };
 
+  const fetchGoals = async () => {
+    try {
+      const res = await goalService.getGoals();
+      const activeGoals = (res.data || []).filter(g => g.status === "active");
+      setGoals(activeGoals);
+    } catch (err) {
+      // Non-critical, ignore
+    }
+  };
+
   useEffect(() => {
     fetchHistory();
     fetchTasks();
+    fetchGoals();
     
     // Restore from localStorage
     const savedSession = localStorage.getItem("pomodoro_session");
@@ -78,6 +92,9 @@ export default function PomodoroPage() {
         if (parsed.activeSessionId) {
           setActiveSessionId(parsed.activeSessionId);
           setSessionType(parsed.sessionType);
+          
+          if (parsed.taskId) setSelectedTaskId(parsed.taskId);
+          if (parsed.goalId) setSelectedGoalId(parsed.goalId);
           
           if (parsed.running) {
             const elapsed = Math.floor((Date.now() - parsed.timestamp) / 1000);
@@ -103,6 +120,8 @@ export default function PomodoroPage() {
         sessionType,
         secondsLeft,
         running,
+        taskId: selectedTaskId,
+        goalId: selectedGoalId,
         timestamp: Date.now()
       }));
     } else {
@@ -137,6 +156,7 @@ export default function PomodoroPage() {
     try {
       const res = await pomodoroService.startSession({
         taskId: selectedTaskId ? parseInt(selectedTaskId, 10) : undefined,
+        goalId: selectedGoalId ? parseInt(selectedGoalId, 10) : undefined,
         sessionType,
         plannedMinutes: Math.round(DURATIONS[sessionType] / 60),
         startedAt: new Date().toISOString()
@@ -310,20 +330,41 @@ export default function PomodoroPage() {
             </Button>
           </div>
 
-          <div className="mt-8 w-full max-w-xs flex flex-col items-center">
-            <label className="text-xs text-[var(--fg-muted)] mb-1 uppercase tracking-wider font-semibold">Linked Task</label>
-            <select
-              value={selectedTaskId}
-              onChange={(e) => setSelectedTaskId(e.target.value)}
-              className="w-full rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--fg)] focus:outline-none focus:ring-1 focus:ring-primary"
-              disabled={!!activeSessionId}
-            >
-              <option value="">No task selected</option>
-              {tasks.map(t => (
-                <option key={t.id} value={t.id}>{t.title}</option>
-              ))}
-            </select>
+          <div className="mt-8 flex w-full max-w-lg flex-col gap-4 sm:flex-row sm:items-end sm:justify-center">
+            <div className="flex-1">
+              <label className="text-xs text-[var(--fg-muted)] mb-1 uppercase tracking-wider font-semibold">Study Goal</label>
+              <select
+                value={selectedGoalId}
+                onChange={(e) => setSelectedGoalId(e.target.value)}
+                className="w-full rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--fg)] focus:outline-none focus:ring-1 focus:ring-primary"
+                disabled={!!activeSessionId}
+              >
+                <option value="">No goal selected</option>
+                {goals.map(g => (
+                  <option key={g.id} value={g.id}>{g.title}</option>
+                ))}
+              </select>
+            </div>
+
+            <div className="flex-1">
+              <label className="text-xs text-[var(--fg-muted)] mb-1 uppercase tracking-wider font-semibold">Linked Task</label>
+              <select
+                value={selectedTaskId}
+                onChange={(e) => setSelectedTaskId(e.target.value)}
+                className="w-full rounded-md border border-[var(--border)] bg-[var(--bg-card)] px-3 py-2 text-sm text-[var(--fg)] focus:outline-none focus:ring-1 focus:ring-primary"
+                disabled={!!activeSessionId}
+              >
+                <option value="">No task selected</option>
+                {tasks.map(t => (
+                  <option key={t.id} value={t.id}>{t.title}</option>
+                ))}
+              </select>
+            </div>
           </div>
+          
+          {goals.length === 0 && !isLoadingHistory && (
+             <p className="mt-4 text-xs text-[var(--fg-muted)] text-center">No study goals yet. You can start this session without a goal.</p>
+          )}
         </Card>
 
         <Card>
