@@ -1404,11 +1404,16 @@ Notifications follow user preferences configured in Settings.
 
 In the MVP, notification preferences are a single global on/off toggle (`user_preferences.notifications_enabled`) — there is no per-category control (e.g., disabling task reminders while keeping goal reminders). Per-category notification preferences are deferred to Version 2.
 
+The notification scheduler runs every 5 minutes.
+
+All notifications must use a deterministic `dedupe_key` to ensure idempotency. Duplicate notification events should fail gracefully.
+
 ---
 
 ## 22.4 Acceptance Criteria
 
 Notifications appear at the correct time without duplication.
+The notification API handles deduplication cleanly without system failures.
 
 ---
 

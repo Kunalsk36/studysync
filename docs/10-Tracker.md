@@ -187,6 +187,13 @@ Next Development Phase:
   - [x] Task 4: Study Goals Frontend Integration
   - [x] Task 5: Manual Study-Time UI & Progress Visualization
   - [x] Task 6: QA & Stabilization
+- [x] Phase 9 – Notifications
+  - [x] Task 1: Notifications Database Schema
+  - [x] Task 2: Notification Backend APIs
+  - [x] Task 3: Scheduled Jobs Infrastructure
+  - [x] Task 4: Event-Driven Triggers
+  - [x] Task 5: Frontend Notification UI Integration
+  - [x] Task 6: QA & Stabilization
 
 ---
 
@@ -200,6 +207,18 @@ Example:
 - Added new feature.
 - Updated deployment platform.
 - Modified database schema.
+
+## 2026-08-13 — Phase 9 Notifications Complete
+
+- Phase 9 has been fully completed.
+- Notification database schema and idempotency dedupe keys implemented.
+- Backend APIs for fetching, reading, and deleting notifications implemented.
+- Scheduled jobs infrastructure implemented with polling every 5 minutes.
+- Event-driven Pomodoro notifications implemented.
+- Frontend integrated with Notifications UI, Badge, and context APIs.
+- QA stabilized.
+
+---
 
 ## 2026-08-12 — Phase 8 Study Goals Complete
 

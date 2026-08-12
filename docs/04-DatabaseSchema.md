@@ -1774,26 +1774,18 @@ Example migration sequence:
 
 ```text
 001_create_users
-
 002_create_user_preferences
-
-003_create_tasks
-
+003_create_user_sessions
 004_create_task_categories
-
-005_create_subtasks
-
-006_create_calendar_events
-
-007_create_pomodoro_sessions
-
-008_create_notifications
-
-009_create_achievements
-
-010_create_user_achievements
-
-011_create_ai_history
+005_create_tasks
+006_create_subtasks
+007_create_calendar_events
+008_create_pomodoro_sessions
+009_create_study_goals
+010_create_manual_study_entries
+011_add_goal_id_to_pomodoro_sessions
+012_create_notifications
+013_add_dedupe_key_to_notifications
 ```
 
 ---

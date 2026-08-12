@@ -1254,15 +1254,15 @@ Use the following checklist to track overall project progress.
 
 | Phase                                         | Status |
 | --------------------------------------------- | ------ |
-| Phase 1 – Project Initialization              | ⬜     |
-| Phase 2 – Authentication                      | ⬜     |
-| Phase 3 – Application Layout                  | ⬜     |
+| Phase 1 – Project Initialization              | 🟩     |
+| Phase 2 – Authentication                      | 🟩     |
+| Phase 3 – Application Layout                  | 🟩     |
 | Phase 4 – Dashboard                           | ⬜     |
-| Phase 5 – Task Management                     | ⬜     |
-| Phase 6 – Calendar                            | ⬜     |
-| Phase 7 – Pomodoro Timer                      | ⬜     |
-| Phase 8 – Study Goals                         | ⬜     |
-| Phase 9 – Notifications                       | ⬜     |
+| Phase 5 – Task Management                     | 🟩     |
+| Phase 6 – Calendar                            | 🟩     |
+| Phase 7 – Pomodoro Timer                      | 🟩     |
+| Phase 8 – Study Goals                         | 🟩     |
+| Phase 9 – Notifications                       | 🟩     |
 | Phase 10 – Gamification                       | ⬜     |
 | Phase 11 – AI Assistant                       | ⬜     |
 | Phase 12 – User Profile                       | ⬜     |
