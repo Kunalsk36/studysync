@@ -3,12 +3,6 @@ const path = require("path");
 const { pool } = require("./connection");
 const logger = require("../utils/logger");
 
-/**
- * Minimal migration runner — executes the numbered .sql files in
- * `migrations/` in order. Each statement uses `CREATE TABLE IF NOT EXISTS`,
- * so re-running this is always safe and never touches existing tables
- * (04-DatabaseSchema.md §26 Migration Strategy).
- */
 async function runMigrations() {
   const migrationsDir = path.join(__dirname, "migrations");
   const files = fs
@@ -16,20 +10,48 @@ async function runMigrations() {
     .filter((file) => file.endsWith(".sql"))
     .sort();
 
+  await pool.query(`
+    CREATE TABLE IF NOT EXISTS migrations (
+      filename VARCHAR(255) PRIMARY KEY,
+      applied_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+  `);
+
+  const [appliedRows] = await pool.query(`SELECT filename FROM migrations`);
+  const appliedSet = new Set(appliedRows.map((row) => row.filename));
+
+  let appliedCount = 0;
+
   for (const file of files) {
+    if (appliedSet.has(file)) {
+      continue;
+    }
+
     const sql = fs.readFileSync(path.join(migrationsDir, file), "utf8");
-    await pool.query(sql);
-    logger.info(`Migration applied: ${file}`);
+    
+    try {
+      await pool.query(sql);
+      await pool.query(`INSERT INTO migrations (filename) VALUES (?)`, [file]);
+      logger.info(`Migration applied: ${file}`);
+      appliedCount++;
+    } catch (err) {
+      logger.error(`Migration failed on file: ${file}`);
+      throw err;
+    }
   }
 
-  logger.info(`${files.length} migration(s) checked/applied.`);
+  if (appliedCount === 0) {
+    logger.info(`No pending migrations to apply.`);
+  } else {
+    logger.info(`${appliedCount} migration(s) applied successfully.`);
+  }
 }
 
 if (require.main === module) {
   runMigrations()
     .then(() => process.exit(0))
     .catch((err) => {
-      logger.error(`Migration failed: ${err.message}`);
+      logger.error(`Migration process failed: ${err.message}`);
       process.exit(1);
     });
 }

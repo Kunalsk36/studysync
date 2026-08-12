@@ -1234,6 +1234,7 @@ Notifications include:
 | ----------------- | ----------------------------------------------------- | -------- | ----------------- | --------------------- |
 | id                | BIGINT UNSIGNED                                       | No       | AUTO_INCREMENT    | Primary Key           |
 | user_id           | BIGINT UNSIGNED                                       | No       | FK                | Notification owner    |
+| dedupe_key        | VARCHAR(255)                                          | No       | -                 | Idempotency/dedupe key|
 | title             | VARCHAR(150)                                          | No       | -                 | Notification title    |
 | message           | TEXT                                                  | No       | -                 | Notification message  |
 | notification_type | ENUM('task','goal','calendar','achievement','system') | No       | 'system'          | Notification category |
@@ -1246,6 +1247,7 @@ Notifications include:
 ## Indexes
 
 - PRIMARY KEY (`id`)
+- UNIQUE KEY (`user_id`, `dedupe_key`)
 - INDEX (`user_id`)
 - INDEX (`is_read`)
 - INDEX (`scheduled_at`)
@@ -1269,6 +1271,7 @@ notifications (Many)
 - Notifications belong to one user.
 - Read notifications remain stored.
 - Scheduled notifications are delivered only once.
+- The `dedupe_key` ensures idempotency by uniquely identifying a specific notification occurrence (e.g., `task_15_due_1h`). The unique constraint on `(user_id, dedupe_key)` guarantees that identical scheduled notifications are safely ignored by the database if the scheduler runs multiple times.
 
 ---
 
@@ -1278,6 +1281,7 @@ notifications (Many)
 {
   "id": 15,
   "user_id": 1,
+  "dedupe_key": "task_15_due_24h",
   "title": "Task Reminder",
   "message": "Complete React Project",
   "notification_type": "task",
@@ -1759,12 +1763,12 @@ Some analytical values may be calculated dynamically rather than stored to avoid
 
 Database changes should be managed using version-controlled migrations.
 
-Recommended approach:
-
+- Never modify existing database structure manually.
 - Create migration files for every schema change.
-- Never modify production tables manually.
+- Never modify past migrations once deployed.
 - Review migrations before deployment.
 - Test migrations in development before production.
+- Migrations are tracked via the `migrations` table (`filename`, `applied_at`). The custom migration runner (`migrate.js`) checks this table to ensure existing migrations are skipped and new migrations are executed sequentially.
 
 Example migration sequence:
 

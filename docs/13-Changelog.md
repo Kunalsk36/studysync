@@ -40,6 +40,12 @@ Example:
 
 # [Unreleased]
 
+## Phase 9 – Notifications
+
+### Added
+- Implemented `migrations` tracking table and updated the custom migration runner to safely track and apply only pending migrations.
+- Added `dedupe_key` to `notifications` table with a unique constraint to ensure robust event idempotency for future time-based schedulers.
+
 ## Phase 8 – Study Goals Planning
 
 ### Added
