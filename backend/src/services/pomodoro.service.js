@@ -1,5 +1,8 @@
 const pomodoroRepository = require('../repositories/pomodoro.repository');
 const goalRepository = require('../repositories/goal.repository');
+const userPreferencesRepository = require('../repositories/userPreferences.repository');
+const notificationService = require('./notification.service');
+const logger = require('../utils/logger');
 
 class PomodoroError extends Error {
   constructor(message, statusCode) {
@@ -27,11 +30,30 @@ async function endSession(userId, sessionData) {
   }
 
   // Update session
-  return await pomodoroRepository.update(sessionId, userId, {
+  const updatedSession = await pomodoroRepository.update(sessionId, userId, {
     actualMinutes,
     status,
     endedAt
   });
+
+  if (status === 'completed') {
+    try {
+      const prefs = await userPreferencesRepository.getByUserId(userId);
+      if (prefs && prefs.notifications_enabled === 1) {
+        await notificationService.createNotification({
+          userId,
+          title: "Pomodoro Complete",
+          message: "Your focus session has been completed.",
+          notificationType: "system",
+          dedupeKey: `pomodoro_${sessionId}_completed`
+        });
+      }
+    } catch (err) {
+      logger.error(`[PomodoroService] Failed to create completion notification for session ${sessionId}:`, err);
+    }
+  }
+
+  return updatedSession;
 }
 
 async function getHistory(userId, queryParams) {

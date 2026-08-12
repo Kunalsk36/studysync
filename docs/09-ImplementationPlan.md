@@ -797,7 +797,7 @@ Implement a notification system that reminds users about important tasks, study 
 - Respect global notification preferences. (Completed)
 
 ### Task 4 – Event-Driven Triggers
-- Connect Pomodoro completion notifications.
+- Connect Pomodoro completion notifications. (Completed)
 
 ### Task 5 – Frontend Notification UI
 - Build frontend Notification Center page.

@@ -49,6 +49,7 @@ Example:
 - Implemented Scheduled Jobs Infrastructure (Phase 9 - Task 3) using `node-cron` with a 5-minute polling interval.
 - Finalized explicit reminder timing windows: 24h and 1h before Task deadlines and Exams; Daily at 9:00 AM (server time) for active Study Goals.
 - Scheduler verifies global `user_preferences.notifications_enabled` prior to notification insertion and leverages database-level idempotency to prevent duplicate reminders.
+- Implemented Event-Driven Triggers (Phase 9 - Task 4) within the Pomodoro service to generate system notifications upon session completion. Includes failure isolation to ensure Pomodoro completion succeeds regardless of notification delivery.
 
 ## Phase 8 – Study Goals Planning
 
