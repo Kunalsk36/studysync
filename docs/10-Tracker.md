@@ -183,7 +183,8 @@ Next Development Phase:
   - [x] Task 1: Database Schema
   - [x] Task 2: Study Goals Backend
   - [x] Task 3: Pomodoro ↔ Study Goal Integration
-  - [ ] Task 4: Study Goals Frontend Integration
+  - [x] Task 4: Study Goals Frontend Integration
+  - [ ] Task 5: Manual Study-Time UI & Progress Visualization
 
 ---
 
