@@ -6,6 +6,7 @@ const taskRoutes = require("./task.routes");
 const calendarRoutes = require("./calendar.routes");
 const pomodoroRoutes = require("./pomodoro.routes");
 const goalRoutes = require("./goal.routes");
+const notificationRoutes = require("./notification.routes");
 
 const router = Router();
 
@@ -23,5 +24,6 @@ router.use("/api/tasks", taskRoutes);
 router.use("/api/calendar", calendarRoutes);
 router.use("/api/pomodoro", pomodoroRoutes);
 router.use("/api/goals", goalRoutes);
+router.use("/api/notifications", notificationRoutes);
 
 module.exports = router;

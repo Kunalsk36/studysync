@@ -45,6 +45,7 @@ Example:
 ### Added
 - Implemented `migrations` tracking table and updated the custom migration runner to safely track and apply only pending migrations.
 - Added `dedupe_key` to `notifications` table with a unique constraint to ensure robust event idempotency for future time-based schedulers.
+- Implemented Notification Backend APIs (`GET /api/notifications`, `PATCH /api/notifications/:id/read`, `PATCH /api/notifications/read-all`, `DELETE /api/notifications/:id`) with strict user isolation and idempotency.
 
 ## Phase 8 – Study Goals Planning
 

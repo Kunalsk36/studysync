@@ -200,11 +200,12 @@ MVP authentication uses a single JWT access token with no refresh token — expi
 
 # 13. Notification APIs
 
-| Method | Endpoint                | Description         |
-| ------ | ----------------------- | ------------------- |
-| GET    | /notifications          | Get notifications   |
-| PATCH  | /notifications/:id/read | Mark as read        |
-| DELETE | /notifications/:id      | Delete notification |
+| Method | Endpoint                          | Description                                      |
+| ------ | --------------------------------- | ------------------------------------------------ |
+| GET    | /api/notifications                | Get all notifications (newest first)             |
+| PATCH  | /api/notifications/read-all       | Mark all notifications as read                   |
+| PATCH  | /api/notifications/:id/read       | Mark a specific notification as read             |
+| DELETE | /api/notifications/:id            | Delete a specific notification                   |
 
 ---
 

@@ -774,7 +774,7 @@ Enable users to define, monitor, and achieve their learning goals through struct
 
 # Phase 9 – Notifications
 
-**Status:** ⬜ Not Started
+**Status:** 🟡 In Progress
 
 ## Objective
 
