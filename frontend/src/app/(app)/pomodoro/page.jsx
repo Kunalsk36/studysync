@@ -2,7 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { motion } from "framer-motion";
-import { Play, Pause, RotateCcw, Coffee, Brain, Trash2 } from "lucide-react";
+import { Play, Pause, RotateCcw, Coffee, Brain, Trash2, CheckCircle2 } from "lucide-react";
 import { PageHeader } from "@/components/shared/PageHeader";
 import { Card, CardHeader, CardTitle } from "@/components/ui/Card";
 import { Button } from "@/components/ui/Button";
@@ -215,7 +215,7 @@ export default function PomodoroPage() {
     if (activeSessionId) {
       const ok = await confirm({
         title: "Reset Timer?",
-        message: "This will cancel your current session.",
+        message: "This will cancel your current session. No study goal progress will be recorded.",
         confirmText: "Reset",
         isDestructive: true
       });
@@ -225,6 +225,26 @@ export default function PomodoroPage() {
     
     setSecondsLeft(DURATIONS[sessionType]);
     setRunning(false);
+  };
+
+  const finishSession = async () => {
+    if (activeSessionId) {
+      const planned = DURATIONS[sessionType];
+      const actualSeconds = planned - secondsLeft;
+      const actualMinutes = Math.max(0, Math.round(actualSeconds / 60));
+
+      const ok = await confirm({
+        title: "Finish this Pomodoro session?",
+        message: `You've worked for ${actualMinutes} minute${actualMinutes !== 1 ? 's' : ''}. This session will be recorded as completed and will contribute to your linked Study Goal if one is selected.`,
+        confirmText: "Finish Session",
+        isDestructive: false
+      });
+      if (!ok) return;
+      
+      setRunning(false);
+      await handleEndSession("completed");
+      setSecondsLeft(DURATIONS[sessionType]);
+    }
   };
 
   const handleDeleteHistory = async (id) => {
@@ -314,7 +334,7 @@ export default function PomodoroPage() {
             </div>
           </div>
 
-          <div className="flex items-center gap-3">
+          <div className="flex flex-wrap items-center justify-center gap-3">
             <Button size="lg" onClick={() => {
               if (running) {
                 setRunning(false); // Pause
@@ -325,7 +345,15 @@ export default function PomodoroPage() {
               {running ? <Pause className="h-4 w-4" /> : <Play className="h-4 w-4" />}
               {running ? "Pause" : (activeSessionId ? "Resume" : "Start")}
             </Button>
-            <Button size="lg" variant="secondary" onClick={reset}>
+            
+            {activeSessionId && (
+              <Button size="lg" variant="secondary" onClick={finishSession} className="w-36 whitespace-nowrap">
+                <CheckCircle2 className="h-4 w-4 mr-2" />
+                Finish Session
+              </Button>
+            )}
+
+            <Button size="lg" variant="secondary" onClick={reset} title="Reset Timer">
               <RotateCcw className="h-4 w-4" />
             </Button>
           </div>

@@ -53,6 +53,7 @@ Example:
 - Manual Study-Time UI & Progress Visualization: created `ManualStudyEntryModal`, integrated study time logging into Study Goals page, displaying distinct `Pomodoro` and `Manual` progress breakdown on the UI.
 - Completed QA Phase 8: Database, APIs, Pomodoro interlinks, frontend edge-case persistence, calculated sums, explicit E2E simulation scripts developed and passed securely blocking Cross-User interaction.
 - Fixed manual QA runtime crashes: Updated `TaskItem` to avoid fetching subtasks for mock tasks on Dashboard (which triggered unhandled 404s and Next.js overlays during navigation) and updated `EmptyState` to correctly render object-based actions passed by the Goals page.
+- Added Pomodoro early session completion workflow (Finish Session button), resolving the ambiguity between abandoning a session (Reset) and intentionally finishing early. Early finishes accurately log completed time toward linked Study Goals.
 
 ### Changed
 - Decided on the Study Goal Progress model: Progress will be calculated dynamically from linked Pomodoro sessions and a new `manual_study_entries` table instead of a static `completed_hours` field to prevent inconsistency and double-counting.
