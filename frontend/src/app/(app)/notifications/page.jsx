@@ -16,7 +16,7 @@ export default function NotificationsPage() {
   const [error, setError] = useState(null);
   
   const toast = useToast();
-  const confirm = useConfirm();
+  const { confirm } = useConfirm();
 
   const fetchNotifications = useCallback(async () => {
     setIsLoading(true);
@@ -26,7 +26,7 @@ export default function NotificationsPage() {
       setNotifications(data || []);
     } catch (err) {
       setError(err.message || "Failed to load notifications.");
-      toast.error("Unable to connect to the server.");
+      toast.showError("Unable to connect to the server.");
     } finally {
       setIsLoading(false);
     }
@@ -45,7 +45,7 @@ export default function NotificationsPage() {
         prev.map((n) => (n.id === id ? { ...n, is_read: 1 } : n))
       );
     } catch (err) {
-      toast.error(err.message || "Failed to mark notification as read.");
+      toast.showError(err.message || "Failed to mark notification as read.");
     }
   };
 
@@ -55,9 +55,9 @@ export default function NotificationsPage() {
       setNotifications((prev) =>
         prev.map((n) => ({ ...n, is_read: 1 }))
       );
-      toast.success("All notifications marked as read.");
+      toast.showSuccess("All notifications marked as read.");
     } catch (err) {
-      toast.error(err.message || "Failed to mark all as read.");
+      toast.showError(err.message || "Failed to mark all as read.");
     }
   };
 
@@ -74,9 +74,9 @@ export default function NotificationsPage() {
     try {
       await notificationService.deleteNotification(id);
       setNotifications((prev) => prev.filter((n) => n.id !== id));
-      toast.success("Notification deleted.");
+      toast.showSuccess("Notification deleted.");
     } catch (err) {
-      toast.error(err.message || "Notification could not be deleted.");
+      toast.showError(err.message || "Notification could not be deleted.");
     }
   };
 

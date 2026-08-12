@@ -62,10 +62,16 @@ This QA encompasses all functionality introduced during Phase 9 (Tasks 1 through
 ## Bugs Found
 - **Bug 1**: Notification response shape mismatch causing `.filter()` runtime errors. The backend API returned `{ success: true, data: [...] }` while frontend components expected an array directly.
 - **Bug 2**: Authenticated dashboard receiving 401 from `/api/auth/me` and remaining stuck in an infinite loading state. The backend 401 response did not clear the `httpOnly` cookie, leading to an infinite redirect loop between `middleware.js` (which saw the cookie and allowed access) and `layout.jsx` (which received a 401 and redirected to `/login`).
+- **Bug 3**: Dashboard returning Next.js 404 page despite correct authentication. The Next.js Turbopack development server failed to correctly resolve the `(app)/dashboard` route due to a conflict with the `/:path*` wildcard matcher in `middleware.js`.
+- **Bug 4**: Notification delete crashed because `NotificationsPage` used the wrong `ConfirmContext` API (`const confirm = useConfirm()` instead of `const { confirm } = useConfirm()`). This resulted in a runtime error: `confirm is not a function`.
+- **Bug 5**: Mark-all-as-read error handling crashed because `NotificationsPage` used the wrong toast API (`toast.error` instead of `toast.showError`). This resulted in a runtime error: `toast.error is not a function`.
 
 ## Bugs Fixed
 - **Bug 1**: Updated `frontend/src/services/notificationService.js` to extract and return `res.data` from the API response instead of the raw HTTP JSON body.
 - **Bug 2**: Updated `backend/src/middleware/authenticate.js` to invoke `clearAuthCookie(res)` whenever a token verification fails or the decoded user is not found in the database. This ensures invalid/expired cookies are purged, allowing the client-side redirect to properly reach the login page instead of looping.
+- **Bug 3**: Updated `frontend/src/middleware.js` to use the official Next.js negative lookahead matcher `"/((?!api|_next/static|_next/image|favicon.ico).*)"`. This prevents Turbopack from incorrectly resolving root-level route groups like `(app)/dashboard` in development while maintaining complete middleware execution for protected routes.
+- **Bug 4**: Updated `frontend/src/app/(app)/notifications/page.jsx` to correctly destructure `const { confirm } = useConfirm()`. The UI delete button now correctly summons the context modal, waits for user confirmation, and issues the `DELETE` API call.
+- **Bug 5**: Updated `frontend/src/app/(app)/notifications/page.jsx` to use the correct `ToastContext` methods (`toast.showSuccess` and `toast.showError`). The "Mark all as read" button now displays success/error toasts without crashing the page.
 
 ## Known Issues
 - None.

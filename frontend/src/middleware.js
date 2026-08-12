@@ -29,34 +29,25 @@ export function middleware(request) {
   const { pathname } = request.nextUrl;
   const hasToken = Boolean(request.cookies.get(COOKIE_NAME));
 
+  console.log(`[Middleware] pathname: ${pathname}, hasToken: ${hasToken}`);
+
   const isProtected = PROTECTED_PREFIXES.some((prefix) => pathname.startsWith(prefix));
   if (isProtected && !hasToken) {
+    console.log(`[Middleware] redirecting to /login (protected & no token)`);
     const loginUrl = new URL("/login", request.url);
     loginUrl.searchParams.set("redirect", pathname);
     return NextResponse.redirect(loginUrl);
   }
 
   if (AUTH_ONLY_PATHS.includes(pathname) && hasToken) {
+    console.log(`[Middleware] redirecting to /dashboard (auth path & has token)`);
     return NextResponse.redirect(new URL("/dashboard", request.url));
   }
 
+  console.log(`[Middleware] allowing through: ${pathname}`);
   return NextResponse.next();
 }
 
 export const config = {
-  matcher: [
-    "/dashboard/:path*",
-    "/tasks/:path*",
-    "/calendar/:path*",
-    "/pomodoro/:path*",
-    "/goals/:path*",
-    "/analytics/:path*",
-    "/notifications/:path*",
-    "/achievements/:path*",
-    "/ai-assistant/:path*",
-    "/profile/:path*",
-    "/settings/:path*",
-    "/login",
-    "/register",
-  ],
+  matcher: ["/((?!api|_next/static|_next/image|favicon.ico).*)"],
 };
