@@ -21,9 +21,9 @@ Unlike the Implementation Plan, which defines what should be built, this tracker
 
 # 2. Project Status
 
-**Current Phase:** Phase 7 – Pomodoro Timer (Complete) → Preparing for Phase 8 – Study Goals
+**Current Phase:** Phase 9 – Notifications
 
-**Overall Progress:** ~45–50% (Phases 1, 2, 3, 5, 6, 7 of 16 development phases complete)
+**Overall Progress:** ~55% (Phases 1, 2, 3, 5, 6, 7, 8 of 16 development phases complete)
 
 **Project Status:** 🟨 In Progress
 
@@ -61,7 +61,7 @@ Unlike the Implementation Plan, which defines what should be built, this tracker
 | Phase 5 – Task Management        | 🟩     |
 | Phase 6 – Calendar               | 🟩     |
 | Phase 7 – Pomodoro Timer         | 🟩     |
-| Phase 8 – Study Goals            | ⬜     |
+| Phase 8 – Study Goals            | 🟩     |
 | Phase 9 – Notifications          | ⬜     |
 | Phase 10 – Gamification          | ⬜     |
 | Phase 4 – Dashboard              | ⬜     |
@@ -78,15 +78,16 @@ Unlike the Implementation Plan, which defines what should be built, this tracker
 
 Current Priority:
 
-• Phase 7 – Pomodoro Timer has been completed.
+• Phase 8 – Study Goals has been completed.
 • Core productivity modules completed:
   - Task Management
   - Calendar
   - Pomodoro Timer
+  - Study Goals
 
 Next Development Phase:
 
-• Phase 8 – Study Goals
+• Phase 9 – Notifications
 
 - Phase 4 (Dashboard) remains intentionally deferred until after the core productivity modules are complete.
 
@@ -179,13 +180,13 @@ Next Development Phase:
   - [x] Task 2: Pomodoro Management Backend (start, end, history)
   - [x] Task 3: Pomodoro Frontend Integration
   - [x] Task 4: QA & Stabilization
-- [ ] Phase 8 – Study Goals
+- [x] Phase 8 – Study Goals
   - [x] Task 1: Database Schema
   - [x] Task 2: Study Goals Backend
   - [x] Task 3: Pomodoro ↔ Study Goal Integration
   - [x] Task 4: Study Goals Frontend Integration
   - [x] Task 5: Manual Study-Time UI & Progress Visualization
-  - [ ] Task 6: QA & Stabilization
+  - [x] Task 6: QA & Stabilization
 
 ---
 
