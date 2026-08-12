@@ -107,9 +107,12 @@ StudySync follows a strict layered architecture pattern for robust separation of
 - Phase 2 – Authentication
 - Phase 3 – Application Layout
 - Phase 5 – Task Management
+- Phase 6 – Calendar
+- Phase 7 – Pomodoro Timer
+- Phase 8 – Study Goals
 
 **Upcoming**
-- Phase 6 – Calendar
+- Phase 9 – Notifications
 
 *(Note: Phase 4 – Dashboard is intentionally deferred until the core productivity modules generate sufficient data).*
 
@@ -242,9 +245,9 @@ Detailed documentation is available in the `docs/` folder:
 - [x] Phase 2 – Authentication
 - [x] Phase 3 – Application Layout
 - [x] Phase 5 – Task Management
-- [ ] Phase 6 – Calendar
-- [ ] Phase 7 – Pomodoro Timer
-- [ ] Phase 8 – Study Goals
+- [x] Phase 6 – Calendar
+- [x] Phase 7 – Pomodoro Timer
+- [x] Phase 8 – Study Goals
 - [ ] Phase 9 – Notifications
 - [ ] Phase 10 – Gamification
 - [ ] Phase 4 – Dashboard

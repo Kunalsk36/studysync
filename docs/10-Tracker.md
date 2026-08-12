@@ -201,6 +201,16 @@ Example:
 - Updated deployment platform.
 - Modified database schema.
 
+## 2026-08-12 — Phase 8 Study Goals Complete
+
+- Phase 8 has been fully completed.
+- Backend APIs for automatic and manual study goals implemented.
+- Database schema created for `study_goals` and `manual_study_entries`.
+- Pomodoro session completion securely linked to automatic goal progress.
+- Frontend integrated with Goal CRUD and manual entry UI.
+- Pomodoro UI updated with early completion workflow and accessible custom select dropdowns.
+- QA stabilized.
+
 ---
 
 ## 2026-08-04 — Phase 7 Pomodoro Timer Complete

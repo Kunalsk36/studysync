@@ -659,7 +659,7 @@ Implement a calendar system that allows users to schedule and manage study sessi
 
 # Phase 7 – Pomodoro Timer
 
-**Status:** ⬜ Not Started
+**Status:** 🟩 Complete
 
 ## Objective
 
@@ -720,7 +720,7 @@ Develop a Pomodoro timer that helps users maintain focus while automatically rec
 
 # Phase 8 – Study Goals
 
-**Status:** ⬜ Not Started
+**Status:** 🟩 Complete
 
 ## Objective
 

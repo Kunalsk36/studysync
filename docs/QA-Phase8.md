@@ -62,10 +62,16 @@ Study Goals (Backend & Frontend)
 - Zero Turbopack or TypeScript warnings generated.
 
 ## Bugs Found
-- No functional defects requiring code changes were identified during final independent audit sweeps. The implementations from Tasks 1–5 were exceptionally strict and closely mapped to the Phase 8 requirements.
+- `/goals` page runtime crash due to `EmptyState` component incorrectly rendering object-based actions as React children.
+- Dashboard mock tasks triggered unhandled 404s in `TaskItem` because it attempted to fetch subtasks for non-existent IDs.
+- Pomodoro UX lacked an explicit "Finish Session" button for early completion, causing confusion between abandoning a session (Reset) and finishing early.
+- Pomodoro dropdown selectors for Study Goal and Linked Task used native HTML `<select>` elements, leading to poor contrast and inconsistent styling, especially in dark mode.
 
 ## Bugs Fixed
-- N/A
+- Updated `EmptyState` to correctly render object-based actions passed by the Goals page.
+- Added a `compact` guard in `TaskItem` to avoid fetching subtasks for mock tasks on the Dashboard.
+- Added a "Finish Session" early completion workflow to Pomodoro, correctly recording elapsed time towards linked Study Goals.
+- Upgraded Pomodoro dropdown selectors to a custom, accessible React `<Select>` component that strictly adheres to the project's design system.
 
 ## Known Issues
 - None.
