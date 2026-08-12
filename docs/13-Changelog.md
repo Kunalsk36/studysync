@@ -46,6 +46,9 @@ Example:
 - Implemented `migrations` tracking table and updated the custom migration runner to safely track and apply only pending migrations.
 - Added `dedupe_key` to `notifications` table with a unique constraint to ensure robust event idempotency for future time-based schedulers.
 - Implemented Notification Backend APIs (`GET /api/notifications`, `PATCH /api/notifications/:id/read`, `PATCH /api/notifications/read-all`, `DELETE /api/notifications/:id`) with strict user isolation and idempotency.
+- Implemented Scheduled Jobs Infrastructure (Phase 9 - Task 3) using `node-cron` with a 5-minute polling interval.
+- Finalized explicit reminder timing windows: 24h and 1h before Task deadlines and Exams; Daily at 9:00 AM (server time) for active Study Goals.
+- Scheduler verifies global `user_preferences.notifications_enabled` prior to notification insertion and leverages database-level idempotency to prevent duplicate reminders.
 
 ## Phase 8 – Study Goals Planning
 

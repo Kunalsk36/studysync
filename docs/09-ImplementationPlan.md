@@ -784,36 +784,28 @@ Implement a notification system that reminds users about important tasks, study 
 
 ## Implementation Tasks
 
-### Database
+### Task 1 – Database Schema
+- Create `notifications` table. (Completed)
 
-- Create `notifications` table
-- Configure user relationships
-- Verify indexes and constraints
+### Task 2 – Notification Backend APIs
+- Create Notification CRUD APIs. (Completed)
+- Implement idempotency and user ownership. (Completed)
 
-### Backend
+### Task 3 – Scheduled Jobs Infrastructure
+- Implement a background scheduler (`node-cron`). (Completed)
+- Generate task, exam, and daily goal reminders based on defined windows. (Completed)
+- Respect global notification preferences. (Completed)
 
-- Create Notification APIs
-- Retrieve notifications
-- Mark notification as read
-- Delete notification
-- Notification scheduling logic
-- Notification filtering
+### Task 4 – Event-Driven Triggers
+- Connect Pomodoro completion notifications.
 
-### Frontend
+### Task 5 – Frontend Notification UI
+- Build frontend Notification Center page.
+- Add Notification dropdown and badge to Navbar.
+- Implement read/unread status and API integration.
 
-- Notification Center page
-- Notification dropdown
-- Notification badge
-- Read/Unread status
-- Empty state
-- Notification settings
-
-### Integration
-
-- Connect task reminders
-- Connect calendar reminders
-- Connect study goal reminders
-- Connect achievement notifications
+### Task 6 – QA & Stabilization
+- Test notification delivery, idempotency, and responsive layouts.
 
 ### Testing
 

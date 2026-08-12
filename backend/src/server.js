@@ -14,6 +14,13 @@ async function start() {
       logger.warn("Continuing startup without a verified database connection.");
     }
 
+    try {
+      const { initScheduler } = require("./jobs/scheduler");
+      initScheduler();
+    } catch (err) {
+      logger.warn(`Scheduler initialization failed: ${err.message}`);
+    }
+
     app.listen(config.port, () => {
       logger.info(`StudySync API running on http://localhost:${config.port} [${config.env}]`);
     });

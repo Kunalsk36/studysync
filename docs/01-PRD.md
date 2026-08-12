@@ -1378,7 +1378,7 @@ Notifications remind users about important activities and encourage consistent p
 
 ### FR-NOT-001
 
-Task reminders.
+Task reminders (Generated 24 hours and 1 hour before the deadline).
 
 ### FR-NOT-002
 
@@ -1390,11 +1390,11 @@ Pomodoro completion notifications.
 
 ### FR-NOT-004
 
-Upcoming exam reminders.
+Upcoming exam reminders (Generated 24 hours and 1 hour before the exam start time).
 
 ### FR-NOT-005
 
-Daily goal reminders.
+Daily goal reminders (Generated daily at 9:00 AM for active goals).
 
 ---
 
