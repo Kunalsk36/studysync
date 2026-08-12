@@ -5,27 +5,31 @@ export const notificationService = {
    * Retrieves all notifications for the authenticated user.
    */
   async getNotifications() {
-    return request('/notifications');
+    const res = await request('/notifications');
+    return res.data;
   },
 
   /**
    * Marks a single notification as read.
    */
   async markAsRead(id) {
-    return request(`/notifications/${id}/read`, { method: 'PATCH' });
+    const res = await request(`/notifications/${id}/read`, { method: 'PATCH' });
+    return res.data;
   },
 
   /**
    * Marks all notifications as read.
    */
   async markAllAsRead() {
-    return request('/notifications/read-all', { method: 'PATCH' });
+    const res = await request('/notifications/read-all', { method: 'PATCH' });
+    return res.data;
   },
 
   /**
    * Deletes a notification.
    */
   async deleteNotification(id) {
-    return request(`/notifications/${id}`, { method: 'DELETE' });
+    const res = await request(`/notifications/${id}`, { method: 'DELETE' });
+    return res.data;
   }
 };

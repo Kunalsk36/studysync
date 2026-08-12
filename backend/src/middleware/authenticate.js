@@ -1,6 +1,7 @@
 const { config } = require("../config");
 const { verifyToken } = require("../utils/jwt");
 const userRepository = require("../repositories/user.repository");
+const { clearAuthCookie } = require("../utils/cookie");
 
 /**
  * Approved session model: verify the JWT (signature + expiration) and
@@ -22,6 +23,7 @@ async function authenticate(req, res, next) {
   try {
     decoded = verifyToken(token);
   } catch {
+    clearAuthCookie(res);
     return res.status(401).json({
       success: false,
       message: "Session expired or invalid. Please log in again.",
@@ -31,6 +33,7 @@ async function authenticate(req, res, next) {
 
   const user = await userRepository.findById(decoded.sub);
   if (!user) {
+    clearAuthCookie(res);
     return res.status(401).json({
       success: false,
       message: "Session expired or invalid. Please log in again.",

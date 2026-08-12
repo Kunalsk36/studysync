@@ -60,10 +60,12 @@ This QA encompasses all functionality introduced during Phase 9 (Tasks 1 through
 - **Details**: Study Goal regression (`node tests/goal.test.js` & `node tests/pomodoro-goal.test.js`) confirms logic continuity. Backend Health Check remains strong with HTTP 200 statuses. Build output confirms successful client/server Next.js compilation.
 
 ## Bugs Found
-- None.
+- **Bug 1**: Notification response shape mismatch causing `.filter()` runtime errors. The backend API returned `{ success: true, data: [...] }` while frontend components expected an array directly.
+- **Bug 2**: Authenticated dashboard receiving 401 from `/api/auth/me` and remaining stuck in an infinite loading state. The backend 401 response did not clear the `httpOnly` cookie, leading to an infinite redirect loop between `middleware.js` (which saw the cookie and allowed access) and `layout.jsx` (which received a 401 and redirected to `/login`).
 
 ## Bugs Fixed
-- None required in Task 6.
+- **Bug 1**: Updated `frontend/src/services/notificationService.js` to extract and return `res.data` from the API response instead of the raw HTTP JSON body.
+- **Bug 2**: Updated `backend/src/middleware/authenticate.js` to invoke `clearAuthCookie(res)` whenever a token verification fails or the decoded user is not found in the database. This ensures invalid/expired cookies are purged, allowing the client-side redirect to properly reach the login page instead of looping.
 
 ## Known Issues
 - None.
