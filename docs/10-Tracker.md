@@ -194,6 +194,8 @@ Next Development Phase:
   - [x] Task 4: Event-Driven Triggers
   - [x] Task 5: Frontend Notification UI Integration
   - [x] Task 6: QA & Stabilization
+- [ ] Phase 10 – Gamification
+  - [x] Task 1: Database Schema
 
 ---
 
